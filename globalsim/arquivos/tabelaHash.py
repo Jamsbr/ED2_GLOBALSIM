@@ -63,8 +63,6 @@ class TabelaHash:
         return valor
 
     def remover(self, chave):
-        """Remove o registro e reconstrói as cadeias com os demais (as aulas não
-        tratam remoção; reinserir mantém as cadeias consistentes)."""
         if self.buscar(chave) is None:
             return False
         restantes = [(p[0], p[1]) for p in self.posicoes if p and p[0] != chave]
