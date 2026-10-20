@@ -1,56 +1,86 @@
 [
     {
-    "codigo": "BR", 
-    "pais": "Brasil", 
-    "regiao": "América do Sul", 
-    "operadora": "Vivo", 
-    "tecnologia": "5G"
-},
+        "codigo": "BR",
+        "pais": "Brasil",
+        "regiao": "América do Sul",
+        "operadora": "Tim",
+        "tecnologia": "5G"
+    },
     {
-    "codigo": "CA", 
-    "pais": "Canadá", 
-    "regiao": "América do Norte", 
-    "operadora": "Maple", 
-    "tecnologia": "5G"
-},
+        "codigo": "CA",
+        "pais": "Canadá",
+        "regiao": "América do Norte",
+        "operadora": "Maple",
+        "tecnologia": "5G"
+    },
     {
-    "codigo": "ES", 
-    "pais": "Espanha", 
-    "regiao": "Europa", 
-    "operadora": "Madrid", 
-    "tecnologia": "4G"
-},
+        "codigo": "ES",
+        "pais": "Espanha",
+        "regiao": "Europa",
+        "operadora": "Madrid",
+        "tecnologia": "4G"
+    },
     {
-    "codigo": "FR", 
-    "pais": "França", 
-    "regiao": "Europa", 
-    "operadora": "Eiffel", 
-    "tecnologia": "5G"},
+        "codigo": "FR",
+        "pais": "França",
+        "regiao": "Europa",
+        "operadora": "Eiffel",
+        "tecnologia": "5G"
+    },
     {
-    "codigo": "IT", 
-    "pais": "Itália", 
-    "regiao": "Europa", 
-    "operadora": "Connecta", 
-    "tecnologia": "3G"
-},
+        "codigo": "IN",
+        "pais": "Inglaterra",
+        "regiao": "Europa",
+        "operadora": "Folks",
+        "tecnologia": "5G"
+    },
     {
-    "codigo": "JP", 
-    "pais": "Japão", 
-    "regiao": "Ásia", 
-    "operadora": "Nippon", 
-    "tecnologia": "4G"
-},
+        "codigo": "IT",
+        "pais": "Itália",
+        "regiao": "Europa",
+        "operadora": "Connecta",
+        "tecnologia": "3G"
+    },
     {
-    "codigo": "PT", 
-    "pais": "Portugal", 
-    "regiao": "Europa", 
-    "operadora": "Fish", 
-    "tecnologia": "3G"
-},
+        "codigo": "JP",
+        "pais": "Japão",
+        "regiao": "Ásia",
+        "operadora": "Nippon",
+        "tecnologia": "4G"
+    },
     {
-    "codigo": "US", 
-    "pais": "Estados Unidos", 
-    "regiao": "América do Norte", 
-    "operadora": "Tesla", 
-    "tecnologia": "5G"}
+        "codigo": "ME",
+        "pais": "Mexico",
+        "regiao": "América do Norte",
+        "operadora": "Ay",
+        "tecnologia": "4G"
+    },
+    {
+        "codigo": "PT",
+        "pais": "Portugal",
+        "regiao": "Europa",
+        "operadora": "Fish",
+        "tecnologia": "3G"
+    },
+    {
+        "codigo": "SW",
+        "pais": "Suecia",
+        "regiao": "Europa",
+        "operadora": "Aurora",
+        "tecnologia": "5G"
+    },
+    {
+        "codigo": "TH",
+        "pais": "Tailandia",
+        "regiao": "Ásia",
+        "operadora": "Thai",
+        "tecnologia": "4G"
+    },
+    {
+        "codigo": "US",
+        "pais": "Estados Unidos",
+        "regiao": "América do Norte",
+        "operadora": "Tesla",
+        "tecnologia": "5G"
+    }
 ]
