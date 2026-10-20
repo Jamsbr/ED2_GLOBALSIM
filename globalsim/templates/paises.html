@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Países atendidos</h2>
+    <a class="btn btn-primary" href="{{ url_for('cadastrarPais') }}">Cadastrar país</a>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr><th>Código</th><th>País</th><th>Região</th><th>Operadora</th><th>Tecnologia</th><th></th></tr>
+    </thead>
+    <tbody>
+    {% for p in paises %}
+        <tr>
+            <td>{{ p.codigo }}</td><td>{{ p.pais }}</td><td>{{ p.regiao }}</td>
+            <td>{{ p.operadora }}</td><td>{{ p.tecnologia }}</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alterarPais', codigo=p.codigo) }}">Alterar</a>
+                <form method="post" action="{{ url_for('removerPais', codigo=p.codigo) }}" class="d-inline"
+                      onsubmit="return confirm('Remover {{ p.pais }}?');">
+                    <button class="btn btn-sm btn-outline-danger">Remover</button>
+                </form>
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="6" class="text-center">Nenhum país cadastrado.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

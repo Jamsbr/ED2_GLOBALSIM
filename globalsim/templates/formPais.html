@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>{{ 'Cadastrar país' if novo else 'Alterar país' }}</h2>
+<form method="post" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Código (2 letras)</label>
+        <input class="form-control" name="codigo" maxlength="2" value="{{ pais.codigo or '' }}"
+               {{ 'required' if novo else 'readonly' }}>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">País</label>
+        <input class="form-control" name="pais" value="{{ pais.pais or '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Região</label>
+        <select class="form-select" name="regiao" required>
+            {% for r in ['Europa', 'América do Sul', 'América do Norte', 'Ásia', 'África', 'Oceania'] %}
+                <option {{ 'selected' if pais.regiao == r }}>{{ r }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Operadora</label>
+        <input class="form-control" name="operadora" value="{{ pais.operadora or '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Tecnologia</label>
+        <select class="form-select" name="tecnologia" required>
+            {% for t in ['3G', '4G', '5G'] %}
+                <option {{ 'selected' if pais.tecnologia == t }}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="btn btn-primary">Salvar</button>
+    <a class="btn btn-link" href="{{ url_for('listaPaises') }}">Cancelar</a>
+</form>
+{% endblock %}

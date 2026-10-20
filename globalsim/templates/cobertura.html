@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>Consulta de cobertura</h2>
+<form method="post" class="row g-2 col-md-6 mb-4">
+    <div class="col">
+        <input class="form-control" name="codigo" maxlength="2" placeholder="Código do país (ex.: IT)"
+               value="{{ codigo or '' }}" required>
+    </div>
+    <div class="col-auto"><button class="btn btn-primary">Verificar cobertura</button></div>
+</form>
+
+{% if codigo is defined %}
+    {% if pais %}
+    <div class="card border-success col-md-6">
+        <div class="card-header bg-success text-white fw-bold">COBERTURA DISPONÍVEL</div>
+        <div class="card-body">
+            <p class="mb-1"><b>País:</b> {{ pais.pais }}</p>
+            <p class="mb-1"><b>Região:</b> {{ pais.regiao }}</p>
+            <p class="mb-1"><b>Operadora:</b> {{ pais.operadora }}</p>
+            <p class="mb-0"><b>Tecnologia:</b> {{ pais.tecnologia }}</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger col-md-6">COBERTURA INDISPONÍVEL — o código "{{ codigo }}" não está cadastrado.</div>
+    {% endif %}
+    <p class="text-muted mt-3">Tabela Hash: endereço de base {{ busca.indice }}, {{ busca.comparacoes }} comparação(ões) na cadeia.</p>
+{% endif %}
+{% endblock %}

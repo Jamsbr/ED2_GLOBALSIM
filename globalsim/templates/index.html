@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<div class="text-center py-5">
+    <h1 class="display-5 fw-bold">GlobalSIM</h1>
+    <p class="lead">Serviço internacional de Internet por eSIM</p>
+    <a class="btn btn-primary m-1" href="{{ url_for('cobertura') }}">Consultar cobertura</a>
+    <a class="btn btn-outline-primary m-1" href="{{ url_for('listaPaises') }}">Países atendidos</a>
+</div>
+{% endblock %}
