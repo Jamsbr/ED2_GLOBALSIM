@@ -17,7 +17,7 @@
             <td class="text-end">
                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alterarPais', codigo=p.codigo) }}">Alterar</a>
                 <form method="post" action="{{ url_for('removerPais', codigo=p.codigo) }}" class="d-inline"
-                      onsubmit="return confirm('Remover {{ p.pais }}?');">
+                      onsubmit="return confirm('Remover {{ p.pais }} e suas conexões na rede?');">
                     <button class="btn btn-sm btn-outline-danger">Remover</button>
                 </form>
             </td>
@@ -28,4 +28,24 @@
     </tbody>
 </table>
 
+<details class="instrumentacao">
+    <summary>Instrumentação da Tabela Hash</summary>
+    <div class="row g-2 my-2">
+        {% for rotulo, valor in [('Capacidade (primo)', stats.capacidade), ('Países', stats.tamanho),
+                                 ('Fator de carga', stats.fatorCarga), ('Colisões', stats.colisoes),
+                                 ('Maior cadeia', stats.maiorCadeia), ('Redimensionamentos', stats.redimensionamentos)] %}
+        <div class="col-6 col-md-2"><div class="metrica"><b>{{ valor }}</b><span>{{ rotulo }}</span></div></div>
+        {% endfor %}
+    </div>
+    <table class="table table-sm table-striped">
+        <thead><tr><th>Posição</th><th>Chave</th><th>Próximo</th></tr></thead>
+        <tbody>
+        {% for slot in posicoes %}
+            <tr><td>{{ loop.index0 }}</td>
+                <td>{{ slot[0] if slot else '—' }}</td>
+                <td>{{ slot[2] if slot and slot[2] is not none else '—' }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</details>
 {% endblock %}

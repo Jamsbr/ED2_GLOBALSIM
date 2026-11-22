@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% from '_mapa.html' import desenhar %}
+{% block conteudo %}
+<h2>Consulta de conectividade</h2>
+<p class="text-secondary">Integra a Árvore B (cliente), a Tabela Hash (cobertura) e o Grafo (rota de menor latência).</p>
+
+<form method="get" class="row g-2 col-lg-9 mb-4">
+    <div class="col-md-3">
+        <input class="form-control" name="cliente" inputmode="numeric" placeholder="ID do cliente" value="{{ idCliente }}" required>
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" name="origem" aria-label="Origem">
+            {% for codigo, nomePais in paises %}<option value="{{ codigo }}" {{ 'selected' if origem == codigo }}>Origem: {{ nomePais }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" name="destino" required aria-label="Destino">
+            <option value="">Destino…</option>
+            {% for codigo, nomePais in paises %}<option value="{{ codigo }}" {{ 'selected' if destino == codigo }}>{{ nomePais }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3"><button class="btn btn-primary w-100">Consultar</button></div>
+</form>
+
+{% if resultado %}
+    {% if resultado.erro %}<div class="alert alert-danger">{{ resultado.erro }}</div>{% endif %}
+    {% for aviso in resultado.avisos %}<div class="alert alert-warning">{{ aviso }}</div>{% endfor %}
+
+    {% if resultado.cliente %}
+    <div class="row g-3">
+        <div class="col-lg-5">
+            <div class="card"><div class="card-body consulta">
+                <h6 class="text-uppercase text-secondary">Consulta de conectividade</h6>
+                <p class="mb-3"><b>Cliente:</b> {{ resultado.cliente.nome }}<br>
+                    <b>eSIM:</b> {{ resultado.cliente.esim or '—' }}<br>
+                    <b>Status:</b> {{ resultado.cliente.status | capitalize }}</p>
+                {% if resultado.pacote %}
+                <p class="mb-3"><b>Pacote:</b> {{ resultado.pacote.pacote }}<br>
+                    <b>Dados:</b> {{ resultado.pacote.dados }}<br>
+                    <b>Validade:</b> {{ resultado.pacote.validade }}</p>
+                {% endif %}
+                {% if resultado.pais %}
+                <p class="mb-3"><b>Destino:</b> {{ resultado.pais.pais }}<br>
+                    <b>Cobertura:</b> Disponível<br>
+                    <b>Tecnologia:</b> {{ resultado.pais.tecnologia }}</p>
+                {% endif %}
+                {% if resultado.rota %}
+                <p class="mb-0"><b>Melhor rota:</b><br>{{ resultado.rota.nomes | join(' → ') }}<br><br>
+                    <b>Latência estimada:</b> {{ resultado.rota.latencia }} ms</p>
+                {% endif %}
+            </div></div>
+        </div>
+        <div class="col-lg-7">
+            {% if mapa %}<div class="card"><div class="card-body p-2">{{ desenhar(mapa) }}</div></div>{% endif %}
+        </div>
+    </div>
+
+    <details class="instrumentacao mt-3"><summary>Instrumentação da consulta</summary>
+        <ul class="mt-2 mb-0">
+            {% set ab = resultado.instrumentacao.arvoreB %}
+            <li><b>Árvore B</b> — ID {{ ab.chave }}: {{ ab.paginas }} página(s), {{ ab.comparacoes }} comparação(ões)</li>
+            {% if resultado.instrumentacao.hash %}
+            <li><b>Tabela Hash</b> — "{{ resultado.destino }}": posição base {{ resultado.instrumentacao.hash.indice }}, {{ resultado.instrumentacao.hash.comparacoes }} comparação(ões)</li>
+            {% endif %}
+        </ul>
+    </details>
+    {% endif %}
+{% endif %}
+{% endblock %}

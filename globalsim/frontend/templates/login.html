@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>Login</h2>
+<p class="text-secondary">Entre com o ID do cliente e o e-mail cadastrado. O login permanece ativo neste navegador.</p>
+<form method="post" class="col-md-5">
+    <input type="hidden" name="proximo" value="{{ proximo }}">
+    <div class="mb-3">
+        <label class="form-label">ID do cliente</label>
+        <input class="form-control" name="id" inputmode="numeric" placeholder="ex.: 58372" required autofocus>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">E-mail</label>
+        <input class="form-control" type="email" name="email" placeholder="ex.: maria@email.com" required>
+    </div>
+    <button class="btn btn-primary">Entrar</button>
+    <a class="btn btn-link" href="{{ url_for('cadastrarCliente') }}">Criar conta</a>
+</form>
+{% endblock %}

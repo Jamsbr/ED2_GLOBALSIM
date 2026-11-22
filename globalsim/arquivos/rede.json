@@ -1,0 +1,81 @@
+{
+  "vertices": [
+    {
+      "codigo": "BR",
+      "x": 190,
+      "y": 70
+    },
+    {
+      "codigo": "US",
+      "x": 570,
+      "y": 70
+    },
+    {
+      "codigo": "PT",
+      "x": 190,
+      "y": 200
+    },
+    {
+      "codigo": "CA",
+      "x": 570,
+      "y": 200
+    },
+    {
+      "codigo": "ES",
+      "x": 80,
+      "y": 330
+    },
+    {
+      "codigo": "FR",
+      "x": 300,
+      "y": 330
+    },
+    {
+      "codigo": "JP",
+      "x": 660,
+      "y": 330
+    },
+    {
+      "codigo": "IT",
+      "x": 300,
+      "y": 450
+    }
+  ],
+  "arestas": [
+    {
+      "origem": "BR",
+      "destino": "US",
+      "latencia": 80
+    },
+    {
+      "origem": "BR",
+      "destino": "PT",
+      "latencia": 120
+    },
+    {
+      "origem": "US",
+      "destino": "CA",
+      "latencia": 20
+    },
+    {
+      "origem": "PT",
+      "destino": "ES",
+      "latencia": 30
+    },
+    {
+      "origem": "PT",
+      "destino": "FR",
+      "latencia": 40
+    },
+    {
+      "origem": "CA",
+      "destino": "JP",
+      "latencia": 110
+    },
+    {
+      "origem": "FR",
+      "destino": "IT",
+      "latencia": 25
+    }
+  ]
+}

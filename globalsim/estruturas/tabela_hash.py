@@ -1,4 +1,13 @@
 class TabelaHash:
+    """Tabela Hash com encadeamento coalescido (lista de busca dentro do próprio vetor).
+
+    Cada posição guarda [chave, valor, próximo], onde "próximo" é o índice do
+    próximo elemento da lista de busca (ou None). A função de hash converte a
+    chave em número (bytes da chave) e aplica MOD N, com N primo.
+    """
+
+    LIMITE_CARGA = 0.85  # acima disso a tabela cresce (mantém as cadeias curtas)
+
     def __init__(self, capacidade=11):
         self.capacidade = self._proximoPrimo(capacidade - 1)
         self.posicoes = [None] * self.capacidade
@@ -8,7 +17,7 @@ class TabelaHash:
 
     def _hash(self, chave):
         # chave alfanumérica -> número (bytes da chave) e depois chave MOD N
-        return int.from_bytes(chave.encode("utf-8"), "big") % self.capacidade
+        return int.from_bytes(str(chave).encode("utf-8"), "big") % self.capacidade
 
     @staticmethod
     def _proximoPrimo(n):
@@ -21,10 +30,12 @@ class TabelaHash:
     def inserir(self, chave, valor):
         """Insere o registro. Se a chave já existir, substitui o valor e retorna False;
         retorna True quando a chave é nova."""
+        chave = str(chave)
         base = self._hash(chave)
         if self.posicoes[base] is None:
             self.posicoes[base] = [chave, valor, None]
             self.tamanho += 1
+            self._verificarCarga()
             return True
 
         i = base
@@ -45,10 +56,12 @@ class TabelaHash:
         self.posicoes[livre] = [chave, valor, None]
         self.posicoes[i][2] = livre
         self.tamanho += 1
+        self._verificarCarga()
         return True
 
     def buscar(self, chave):
         """Retorna o valor ou None. Guarda endereço de base e comparações em ultimaBusca."""
+        chave = str(chave)
         base = self._hash(chave)
         i = base
         comparacoes = 0
@@ -63,20 +76,29 @@ class TabelaHash:
         return valor
 
     def remover(self, chave):
+        chave = str(chave)
         if self.buscar(chave) is None:
             return False
         restantes = [(p[0], p[1]) for p in self.posicoes if p and p[0] != chave]
         self._reconstruir(restantes)
         return True
 
+    def itens(self):
+        """Pares (chave, valor) ordenados pela chave."""
+        return sorted(((p[0], p[1]) for p in self.posicoes if p), key=lambda par: par[0])
+
     def listar(self):
-        return sorted((p[1] for p in self.posicoes if p), key=lambda v: v["codigo"])
+        return [valor for _, valor in self.itens()]
 
     def _reconstruir(self, itens):
         self.posicoes = [None] * self.capacidade
         self.tamanho = 0
         for chave, valor in itens:
             self.inserir(chave, valor)
+
+    def _verificarCarga(self):
+        if self.tamanho / self.capacidade > self.LIMITE_CARGA:
+            self._redimensionar()
 
     def _redimensionar(self):
         itens = [(p[0], p[1]) for p in self.posicoes if p]

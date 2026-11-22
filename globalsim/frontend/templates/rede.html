@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% from '_mapa.html' import desenhar %}
+{% block conteudo %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="mb-0">Conexões - Grafos</h2>
+    <a class="btn btn-primary" href="{{ url_for('consulta') }}">Consulta integrada de conectividade</a>
+</div>
+<p class="text-secondary">Cada país atendido é um vértice; o peso de cada conexão é a latência simulada em milissegundos.</p>
+
+<div class="card mb-2"><div class="card-body p-2">{{ desenhar(mapa) }}</div></div>
+<form method="post" action="{{ url_for('reorganizarRede') }}" class="mb-4 text-end">
+    <button class="btn btn-sm btn-outline-secondary">Reorganizar mapa</button>
+</form>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <h5>Executar algoritmo</h5>
+        <form method="get" class="row g-2 mb-3">
+            <div class="col-12">
+                <select class="form-select" name="algoritmo" id="algoritmo" required>
+                    <option value="dijkstra" {{ 'selected' if algoritmo == 'dijkstra' }}>Dijkstra — rota de menor latência</option>
+                    <option value="bfs" {{ 'selected' if algoritmo == 'bfs' }}>BFS — busca em largura</option>
+                    <option value="dfs" {{ 'selected' if algoritmo == 'dfs' }}>DFS — busca em profundidade</option>
+                </select>
+            </div>
+            <div class="col-6">
+                <select class="form-select" name="origem" required>
+                    <option value="">Origem…</option>
+                    {% for codigo, nomePais in vertices %}<option value="{{ codigo }}" {{ 'selected' if origem == codigo }}>{{ codigo }} — {{ nomePais }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6">
+                <select class="form-select" name="destino">
+                    <option value="">Destino (só Dijkstra)…</option>
+                    {% for codigo, nomePais in vertices %}<option value="{{ codigo }}" {{ 'selected' if destino == codigo }}>{{ codigo }} — {{ nomePais }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-12"><button class="btn btn-primary">Executar</button></div>
+        </form>
+
+        {% if resultado %}
+            {% if resultado.erro %}
+            <div class="alert alert-warning">{{ resultado.erro }}</div>
+            {% elif resultado.algoritmo == 'dijkstra' %}
+                {% if resultado.caminho %}
+                <div class="alert alert-success mb-3">
+                    <b>Melhor rota:</b> {% for c in resultado.caminho %}{{ nome(c) }}{{ ' → ' if not loop.last }}{% endfor %}<br>
+                    <b>Latência estimada:</b> {{ resultado.latencia }} ms
+                </div>
+                {% else %}
+                <div class="alert alert-danger">Não existe rota entre {{ nome(resultado.origem) }} e {{ nome(resultado.destino) }}.</div>
+                {% endif %}
+                <table class="table table-sm table-striped">
+                    <thead><tr><th>Vértice</th><th>Menor latência desde {{ resultado.origem }}</th></tr></thead>
+                    <tbody>
+                    {% for v, d in resultado.distancias.items() | sort %}
+                        <tr><td>{{ v }} — {{ nome(v) }}</td><td>{{ (d ~ ' ms') if d is not none else 'inalcançável' }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="alert alert-success mb-2">
+                    <b>{{ 'BFS' if resultado.algoritmo == 'bfs' else 'DFS' }} a partir de {{ resultado.origem }}:</b><br>
+                    {% for v in resultado.ordem %}{{ loop.index }}. {{ v }} ({{ 'nível' if resultado.algoritmo == 'bfs' else 'profundidade' }} {{ resultado.detalhe[v] }}){{ '; ' if not loop.last }}{% endfor %}
+                </div>
+                {% if resultado.naoAlcancados %}
+                <p class="small text-secondary">Não alcançados: {{ resultado.naoAlcancados | join(', ') }}</p>
+                {% endif %}
+                <p class="small text-secondary">Os números no mapa mostram a ordem de visita; as arestas destacadas formam a árvore da busca.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="col-lg-6">
+        <h5>Conexões da rede</h5>
+        <form method="post" action="{{ url_for('salvarConexao') }}" class="row g-2 mb-3">
+            <div class="col-4">
+                <select class="form-select" name="origem" required>
+                    <option value="">Origem</option>
+                    {% for codigo, nomePais in vertices %}<option value="{{ codigo }}">{{ codigo }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-4">
+                <select class="form-select" name="destino" required>
+                    <option value="">Destino</option>
+                    {% for codigo, nomePais in vertices %}<option value="{{ codigo }}">{{ codigo }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-4"><input class="form-control" name="latencia" inputmode="numeric" placeholder="ms" required></div>
+            <div class="col-12"><button class="btn btn-outline-primary">Adicionar / atualizar conexão</button></div>
+        </form>
+        <table class="table table-sm table-striped align-middle">
+            <thead><tr><th>Conexão</th><th>Latência</th><th></th></tr></thead>
+            <tbody>
+            {% for o, d, p in conexoes %}
+                <tr>
+                    <td>{{ nome(o) }} ↔ {{ nome(d) }}</td><td>{{ p }} ms</td>
+                    <td class="text-end">
+                        <form method="post" action="{{ url_for('removerConexao') }}" class="d-inline"
+                              onsubmit="return confirm('Remover a conexão {{ o }} ↔ {{ d }}?');">
+                            <input type="hidden" name="origem" value="{{ o }}"><input type="hidden" name="destino" value="{{ d }}">
+                            <button class="btn btn-sm btn-outline-danger">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="3" class="text-center">Nenhuma conexão cadastrada.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -23,5 +23,8 @@
     {% else %}
     <div class="alert alert-danger col-md-6">COBERTURA INDISPONÍVEL — o código "{{ codigo }}" não está cadastrado.</div>
     {% endif %}
+    <p class="text-secondary small mt-3">
+        Tabela Hash: posição base {{ busca.indice }} · {{ busca.comparacoes }} comparação(ões)
+    </p>
 {% endif %}
 {% endblock %}

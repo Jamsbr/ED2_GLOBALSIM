@@ -1,0 +1,24 @@
+{% macro desenhar(mapa) %}
+<svg class="mapa" viewBox="0 0 {{ mapa.largura }} {{ mapa.altura }}" role="img" aria-label="Grafo da rede GlobalSIM">
+    {% for a in mapa.arestas %}
+    <line class="aresta {{ 'destaque' if a.destaque }}" x1="{{ a.x1 }}" y1="{{ a.y1 }}" x2="{{ a.x2 }}" y2="{{ a.y2 }}"/>
+    {% endfor %}
+    {% for a in mapa.arestas %}
+    <g class="peso {{ 'destaque' if a.destaque }}">
+        <rect x="{{ a.mx - 22 }}" y="{{ a.my - 11 }}" width="44" height="22" rx="6"/>
+        <text x="{{ a.mx }}" y="{{ a.my + 4 }}" text-anchor="middle">{{ a.peso }} ms</text>
+    </g>
+    {% endfor %}
+    {% for v in mapa.vertices %}
+    <g class="vertice {{ 'ativo' if v.ativo }} {{ 'origem' if v.origem }} {{ 'destino' if v.destino }}">
+        <circle cx="{{ v.x }}" cy="{{ v.y }}" r="26"/>
+        <text class="codigo" x="{{ v.x }}" y="{{ v.y + 5 }}" text-anchor="middle">{{ v.codigo }}</text>
+        <text class="nome" x="{{ v.x }}" y="{{ v.y + 46 }}" text-anchor="middle">{{ v.nome }}</text>
+        {% if v.ordem %}
+        <circle class="selo-ordem" cx="{{ v.x + 22 }}" cy="{{ v.y - 22 }}" r="11"/>
+        <text class="num-ordem" x="{{ v.x + 22 }}" y="{{ v.y - 18 }}" text-anchor="middle">{{ v.ordem }}</text>
+        {% endif %}
+    </g>
+    {% endfor %}
+</svg>
+{% endmacro %}

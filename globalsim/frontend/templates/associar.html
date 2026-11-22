@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>Associar eSIM e pacote</h2>
+<p class="text-secondary">Cliente {{ cliente.id }} — {{ cliente.nome }}</p>
+<form method="post" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Pacote</label>
+        <select class="form-select" name="pacote" required>
+            {% for p in pacotes %}
+            <option value="{{ p.codigo }}" {{ 'selected' if cliente.pacote == p.codigo }}>
+                {{ p.codigo }} — {{ p.pacote }} ({{ p.dados }}, {{ p.validade }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">eSIM <small class="text-secondary">(deixe em branco para gerar automaticamente)</small></label>
+        <input class="form-control" name="esim" placeholder="ESIM-12345" value="{{ cliente.esim }}">
+    </div>
+    <button class="btn btn-primary">Associar</button>
+    <a class="btn btn-link" href="{{ url_for('detalheCliente', id=cliente.id) }}">Cancelar</a>
+</form>
+{% endblock %}

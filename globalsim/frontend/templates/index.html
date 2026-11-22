@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<p class="text-center text-secondary mt-4 mb-5">Serviço internacional de Internet por eSIM</p>
+
+<div class="painel">
+    <a class="caixa" href="{{ url_for('cobertura') }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 9a15 15 0 0 1 20 0"/><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg>
+        <span class="caixa-titulo">Consultar Cobertura</span>
+        <span class="caixa-texto">Verifique se um país é atendido</span>
+    </a>
+    <a class="caixa" href="{{ url_for('listaPaises') }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20"/></svg>
+        <span class="caixa-titulo">Países Atendidos</span>
+        <span class="caixa-texto">Cadastro e listagem de países</span>
+    </a>
+    <a class="caixa" href="{{ url_for('rede') }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="19" r="2.5"/>
+            <path d="M7.5 6h9"/><path d="M6.5 8l4 9"/><path d="M17.5 8l-4 9"/></svg>
+        <span class="caixa-titulo">Conexões - Grafos</span>
+        <span class="caixa-texto">Rede internacional e rotas</span>
+    </a>
+</div>
+{% endblock %}

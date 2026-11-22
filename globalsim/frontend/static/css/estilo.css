@@ -1,0 +1,254 @@
+/* ---------- cores e fontes do site (edite aqui) ---------- */
+:root {
+    --cor-site: #9146ff;
+    --cor-site-hover: #772ce8;
+    --fundo: #0e0e10;
+    --superficie: #18181b;
+    --superficie-2: #1f1f23;
+    --borda: #2f2f35;
+    --texto: #efeff1;
+    --texto-suave: #adadb8;
+    --fonte-logo: 'Silkscreen', 'Courier New', monospace;
+}
+
+body {
+    background: var(--fundo);
+    color: var(--texto);
+    min-height: 100vh;
+}
+
+/* ---------- botões e formulários (sobrescreve o Bootstrap) ---------- */
+.btn-primary {
+    --bs-btn-bg: var(--cor-site);
+    --bs-btn-border-color: var(--cor-site);
+    --bs-btn-hover-bg: var(--cor-site-hover);
+    --bs-btn-hover-border-color: var(--cor-site-hover);
+    --bs-btn-active-bg: var(--cor-site-hover);
+    --bs-btn-active-border-color: var(--cor-site-hover);
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--cor-site);
+    --bs-btn-border-color: var(--cor-site);
+    --bs-btn-hover-bg: var(--cor-site);
+    --bs-btn-hover-border-color: var(--cor-site);
+    --bs-btn-active-bg: var(--cor-site-hover);
+    --bs-btn-active-border-color: var(--cor-site-hover);
+}
+.btn-link { --bs-btn-color: var(--cor-site); --bs-btn-hover-color: var(--cor-site-hover); }
+.form-control, .form-select {
+    background: var(--superficie);
+    border-color: var(--borda);
+}
+.form-control:focus, .form-select:focus {
+    background: var(--superficie);
+    border-color: var(--cor-site);
+    box-shadow: 0 0 0 .2rem rgba(145, 70, 255, .25);
+}
+.table {
+    --bs-table-bg: var(--superficie);
+    --bs-table-striped-bg: var(--superficie-2);
+    --bs-table-border-color: var(--borda);
+}
+.card { background: var(--superficie); border-color: var(--borda); }
+
+/* ---------- navbar ---------- */
+.barra {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 56px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--superficie);
+    border-bottom: 1px solid var(--borda);
+}
+.logo {
+    font-family: var(--fonte-logo);
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--cor-site);
+    text-decoration: none;
+}
+.logo:hover { color: var(--cor-site); }
+.barra .logo { font-size: 1.5rem; }
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--cor-site);
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.avatar:hover { background: var(--cor-site-hover); }
+
+/* ---------- menu do cliente ---------- */
+.menu-usuario {
+    width: 320px;
+    padding: 0;
+    overflow: hidden;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    margin-top: .5rem !important;
+}
+.menu-capa {
+    height: 88px;
+    background: linear-gradient(135deg, var(--cor-site) 0%, #3b1a7a 100%);
+}
+.menu-avatar {
+    width: 72px;
+    height: 72px;
+    margin: -36px auto 0;
+    border: 4px solid var(--superficie);
+    border-radius: 50%;
+    background: var(--cor-site);
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.menu-nome { text-align: center; font-weight: 700; font-size: 1.1rem; margin-top: .5rem; }
+.menu-email { text-align: center; color: var(--texto-suave); font-size: .85rem; margin-bottom: 1rem; }
+
+.menu-info {
+    margin: 0 1rem 1rem;
+    padding: .5rem 1rem;
+    background: var(--superficie-2);
+    border-radius: 8px;
+}
+.menu-info div {
+    display: flex;
+    justify-content: space-between;
+    padding: .35rem 0;
+    font-size: .9rem;
+}
+.menu-info span:first-child { color: var(--texto-suave); }
+
+.menu-link {
+    display: block;
+    padding: .7rem 1.25rem;
+    color: var(--texto);
+    text-decoration: none;
+    border-top: 1px solid var(--borda);
+}
+.menu-link:hover { background: var(--superficie-2); color: var(--texto); }
+
+
+.avatar svg { display: block; }
+.menu-capa-curta { height: 36px; }
+.menu-secao {
+    padding: .5rem 1.25rem;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    background: var(--superficie-2);
+    border-top: 1px solid var(--borda);
+}
+.menu-destaque { font-weight: 700; color: var(--cor-site); border-top: 0; }
+.menu-sair {
+    width: 100%;
+    background: none;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    text-align: left;
+    color: #ff6b6b;
+}
+.menu-sair:hover { background: var(--superficie-2); color: #ff6b6b; }
+
+/* ---------- página inicial: três caixas grandes ---------- */
+.painel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 3rem 0;
+}
+.caixa {
+    flex: 1 1 260px;
+    max-width: 360px;
+    min-height: 220px;
+    padding: 2rem 1.5rem;
+    border-radius: 36px;
+    background: var(--cor-site);
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    text-align: center;
+    transition: transform .15s ease, background .15s ease;
+}
+.caixa:hover { background: var(--cor-site-hover); color: #fff; transform: translateY(-4px); }
+.caixa svg { width: 64px; height: 64px; margin-bottom: .5rem; }
+.caixa-titulo { font-weight: 700; font-size: 1.25rem; }
+.caixa-texto { font-size: .9rem; opacity: .85; }
+
+/* ---------- instrumentação e detalhes ---------- */
+.metrica {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: .6rem .8rem;
+    text-align: center;
+}
+.metrica b { display: block; font-size: 1.3rem; color: var(--cor-site); }
+.metrica span { font-size: .75rem; color: var(--texto-suave); }
+.instrumentacao {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: .6rem 1rem;
+}
+.instrumentacao summary { cursor: pointer; color: var(--texto-suave); }
+.caminho { padding-left: 1.2rem; font-size: .88rem; color: var(--texto-suave); }
+.pagina-b {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: .8rem;
+    padding: .25rem .6rem;
+    background: var(--superficie-2);
+    border: 1px solid var(--cor-site);
+    border-radius: 6px;
+}
+.plano {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-left: 3px solid var(--cor-site);
+    border-radius: 8px;
+    padding: .75rem 1rem;
+    margin-bottom: 1rem;
+}
+.consulta p { line-height: 1.5; }
+.selo { padding: .15rem .55rem; border-radius: 999px; font-size: .78rem; text-transform: capitalize; }
+.selo-ativo { background: rgba(32, 201, 151, .18); color: #3ddcae; }
+.selo-inativo { background: rgba(173, 173, 184, .18); color: var(--texto-suave); }
+.selo-suspenso { background: rgba(255, 193, 7, .18); color: #ffc107; }
+
+/* ---------- mapa da rede (SVG) ---------- */
+.mapa { width: 100%; height: auto; display: block; }
+.mapa .aresta { stroke: #4a4a55; stroke-width: 2.5; }
+.mapa .aresta.destaque { stroke: var(--cor-site); stroke-width: 5; }
+.mapa .peso rect { fill: var(--superficie-2); stroke: var(--borda); }
+.mapa .peso text { fill: var(--texto-suave); font-size: 12px; }
+.mapa .peso.destaque rect { stroke: var(--cor-site); }
+.mapa .peso.destaque text { fill: #fff; font-weight: 700; }
+.mapa .vertice circle:first-child { fill: var(--superficie-2); stroke: #6c6c78; stroke-width: 2.5; }
+.mapa .vertice.ativo circle:first-child { stroke: var(--cor-site); fill: #2a1f45; }
+.mapa .vertice.origem circle:first-child { fill: var(--cor-site); stroke: #fff; }
+.mapa .vertice.destino circle:first-child { fill: #20c997; stroke: #fff; }
+.mapa .codigo { fill: #fff; font-weight: 700; font-size: 15px; }
+.mapa .nome { fill: var(--texto-suave); font-size: 12px; paint-order: stroke; stroke: var(--superficie); stroke-width: 5px; stroke-linejoin: round; }
+.mapa .selo-ordem { fill: #fff; }
+.mapa .num-ordem { fill: var(--cor-site-hover); font-weight: 700; font-size: 12px; }

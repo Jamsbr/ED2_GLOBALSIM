@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="mb-0">{{ cliente.nome }}</h2>
+    <div>
+        <a class="btn btn-outline-secondary" href="{{ url_for('alterarCliente', id=cliente.id) }}">Alterar dados</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('associarCliente', id=cliente.id) }}">Associar eSIM / pacote</a>
+        <a class="btn btn-primary" href="{{ url_for('consulta', cliente=cliente.id) }}">Consultar conectividade</a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card"><div class="card-body">
+            <p class="mb-1"><b>ID:</b> {{ cliente.id }}</p>
+            <p class="mb-1"><b>E-mail:</b> {{ cliente.email }}</p>
+            <p class="mb-1"><b>eSIM:</b> {{ cliente.esim or '—' }}</p>
+            <p class="mb-1"><b>Status:</b> <span class="selo selo-{{ cliente.status }}">{{ cliente.status }}</span></p>
+            <p class="mb-0"><b>Pacote:</b>
+                {% if pacote %}{{ pacote.pacote }} — {{ pacote.dados }}, {{ pacote.validade }}{% else %}nenhum{% endif %}</p>
+        </div></div>
+    </div>
+    <div class="col-md-6">
+        <div class="card"><div class="card-body">
+            <h6>Busca na Árvore B (instrumentação)</h6>
+            <p class="mb-1">Páginas visitadas: <b>{{ busca.paginas }}</b> · Comparações: <b>{{ busca.comparacoes }}</b></p>
+            <ol class="caminho mb-0">
+                {% for p in busca.caminho %}
+                <li>página {{ p.pagina }}: [{{ p.chaves | join(' | ') }}]</li>
+                {% endfor %}
+            </ol>
+        </div></div>
+    </div>
+</div>
+<a class="btn btn-link mt-3 px-0" href="{{ url_for('listaClientes') }}">← Voltar à lista</a>
+{% endblock %}

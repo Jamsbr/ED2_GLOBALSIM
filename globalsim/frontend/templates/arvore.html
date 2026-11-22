@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>Instrumentação da Árvore B</h2>
+<p class="text-secondary">Ordem {{ stats.ordem }} (máximo de {{ stats.ordem }} chaves por página). A página é dividida quando recebe uma chave a mais.</p>
+
+<div class="row g-2 mb-4">
+    {% for rotulo, valor in [('Altura', stats.altura), ('Páginas', stats.paginas), ('Chaves', stats.chaves),
+                             ('Divisões', stats.divisoes), ('Ocupação', stats.ocupacao ~ '%')] %}
+    <div class="col-6 col-md-2"><div class="metrica"><b>{{ valor }}</b><span>{{ rotulo }}</span></div></div>
+    {% endfor %}
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6"><div class="card"><div class="card-body">
+        <h6>Última busca</h6>
+        {% if busca.chave is not none %}
+        <p class="mb-0">ID {{ busca.chave }} — {{ 'encontrado' if busca.encontrado else 'não encontrado' }}<br>
+            {{ busca.paginas }} página(s) · {{ busca.comparacoes }} comparação(ões)</p>
+        {% else %}<p class="mb-0 text-secondary">Nenhuma busca feita ainda.</p>{% endif %}
+    </div></div></div>
+    <div class="col-md-6"><div class="card"><div class="card-body">
+        <h6>Última inserção</h6>
+        {% if insercao.chave is not none %}
+        <p class="mb-0">ID {{ insercao.chave }}: {{ insercao.paginas }} página(s) · {{ insercao.comparacoes }} comparação(ões)<br>
+            {{ insercao.divisoes }} divisão(ões){{ ' · a raiz dividiu e a árvore cresceu' if insercao.raizDividiu }}</p>
+        {% else %}<p class="mb-0 text-secondary">Nenhum cliente inserido nesta execução.</p>{% endif %}
+    </div></div></div>
+</div>
+
+<h5>Páginas por nível</h5>
+<p class="text-secondary small">{{ stats.paginasPorNivel | join(' → ') }} (raiz → folhas)</p>
+{% for nivel in niveis %}
+<div class="mb-3">
+    <div class="small text-secondary mb-1">Nível {{ loop.index0 }}{{ ' (raiz)' if loop.first }} — {{ nivel | length }} página(s)</div>
+    <div class="d-flex flex-wrap gap-2">
+        {% for p in nivel %}<span class="pagina-b" title="página {{ p.id }}">{{ p.chaves | join(' | ') }}</span>{% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% if ocultos %}<p class="text-secondary small">+ {{ ocultos }} nível(is) inferior(es) não exibido(s).</p>{% endif %}
+<a class="btn btn-link px-0" href="{{ url_for('listaClientes') }}">← Voltar aos clientes</a>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>{{ 'Cadastrar cliente' if modo == 'cadastrar' else 'Alterar cliente ' ~ cliente.id }}</h2>
+<form method="post" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">ID {% if modo == 'cadastrar' %}<small class="text-secondary">(único; chave da Árvore B)</small>{% endif %}</label>
+        <input class="form-control" name="id" inputmode="numeric" value="{{ cliente.id }}"
+               {{ 'required' if modo == 'cadastrar' else 'readonly' }}>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input class="form-control" name="nome" value="{{ cliente.nome }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">E-mail</label>
+        <input class="form-control" type="email" name="email" value="{{ cliente.email }}" required>
+    </div>
+    {% if modo == 'alterar' %}
+    <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select class="form-select" name="status">
+            {% for s in status %}<option {{ 'selected' if cliente.status == s }}>{{ s }}</option>{% endfor %}
+        </select>
+    </div>
+    {% endif %}
+    <button class="btn btn-primary">Salvar</button>
+    <a class="btn btn-link" href="{{ url_for('detalheCliente', id=cliente.id) if modo == 'alterar' else url_for('listaClientes') }}">Cancelar</a>
+</form>
+{% endblock %}

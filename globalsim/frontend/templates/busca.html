@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h2>Busca avançada <small class="text-secondary fs-6">índices secundários e consultas multidimensionais</small></h2>
+<p class="text-secondary">A Árvore B só encontra clientes pelo ID. Para buscar por outros atributos, cada atributo tem um índice secundário (Tabela Hash: valor → lista de IDs). Os critérios escolhidos são combinados por interseção e os registros finais são lidos na Árvore B.</p>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <h5>Clientes</h5>
+        <form method="get" class="row g-2 mb-3">
+            <input type="hidden" name="tipo" value="clientes">
+            <div class="col-md-4">
+                <select class="form-select" name="status"><option value="">Status (todos)</option>
+                    {% for s in status %}<option {{ 'selected' if f.get('status') == s }}>{{ s }}</option>{% endfor %}</select>
+            </div>
+            <div class="col-md-8">
+                <select class="form-select" name="pacote"><option value="">Pacote (todos)</option>
+                    {% for p in pacotes %}<option value="{{ p.codigo }}" {{ 'selected' if f.get('pacote') == p.codigo | string }}>{{ p.codigo }} — {{ p.pacote }}</option>{% endfor %}</select>
+            </div>
+            <div class="col-12"><button class="btn btn-primary">Buscar clientes</button></div>
+        </form>
+
+        {% if rc %}
+            {% if rc.erro %}<div class="alert alert-warning">{{ rc.erro }}</div>{% else %}
+            <div class="alert alert-success py-2">{{ rc.total }} cliente(s) encontrado(s) de {{ rc.base }}.</div>
+            {% include '_plano.html' %}
+            <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle">
+                <thead><tr><th>ID</th><th>Nome</th><th>eSIM</th><th>Pacote</th><th>Status</th></tr></thead>
+                <tbody>
+                {% for c in rc.clientes %}
+                    <tr><td><a href="{{ url_for('detalheCliente', id=c.id) }}">{{ c.id }}</a></td><td>{{ c.nome }}</td><td>{{ c.esim or '—' }}</td>
+                        <td>{{ nomePacote(c.pacote) }}</td><td><span class="selo selo-{{ c.status }}">{{ c.status }}</span></td></tr>
+                {% else %}
+                    <tr><td colspan="5" class="text-center">Nenhum cliente atende a todos os critérios.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if rc.total > rc.limite %}<p class="small text-secondary">Exibindo os primeiros {{ rc.limite }} de {{ rc.total }}.</p>{% endif %}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="col-lg-5">
+        <h5>Países</h5>
+        <form method="get" class="row g-2 mb-3">
+            <input type="hidden" name="tipo" value="paises">
+            <div class="col-8">
+                <select class="form-select" name="regiao" required><option value="">Região…</option>
+                    {% for r in regioes %}<option {{ 'selected' if f.get('regiao') == r }}>{{ r }}</option>{% endfor %}</select>
+            </div>
+            <div class="col-4"><button class="btn btn-primary w-100">Buscar</button></div>
+        </form>
+        {% if rp %}
+            <p class="small text-secondary">{{ rp.paises | length }} de {{ rp.base }} país(es) · índice secundário: {{ rp.comparacoes }} comparação(ões) no hash</p>
+            <table class="table table-sm table-striped">
+                <thead><tr><th>Código</th><th>País</th><th>Região</th><th>Tecnologia</th></tr></thead>
+                <tbody>{% for p in rp.paises %}<tr><td>{{ p.codigo }}</td><td>{{ p.pais }}</td><td>{{ p.regiao }}</td><td>{{ p.tecnologia }}</td></tr>
+                {% else %}<tr><td colspan="4" class="text-center">Nenhum país nessa região.</td></tr>{% endfor %}</tbody>
+            </table>
+        {% endif %}
+
+        <details class="instrumentacao mt-3"><summary>Índices secundários</summary>
+            <table class="table table-sm table-striped mt-2">
+                <thead><tr><th>Índice</th><th>Valores</th><th>Entradas</th><th>Colisões</th><th>Carga</th></tr></thead>
+                <tbody>{% for i in indices %}<tr><td>{{ i.campo }}</td><td>{{ i.valoresDistintos }}</td><td>{{ i.entradas }}</td>
+                    <td>{{ i.colisoes }}</td><td>{{ i.fatorCarga }}</td></tr>{% endfor %}</tbody>
+            </table>
+        </details>
+    </div>
+</div>
+{% endblock %}

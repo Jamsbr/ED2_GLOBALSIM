@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="mb-0">Clientes <small class="text-secondary fs-6">{{ total }} registros na Árvore B</small></h2>
+    <div>
+        <a class="btn btn-outline-primary" href="{{ url_for('arvoreB') }}">Instrumentação</a>
+        <a class="btn btn-primary" href="{{ url_for('cadastrarCliente') }}">Cadastrar cliente</a>
+    </div>
+</div>
+
+<form method="get" action="{{ url_for('buscarCliente') }}" class="row g-2 col-md-6 mb-4">
+    <div class="col">
+        <input class="form-control" name="id" inputmode="numeric" placeholder="Consultar cliente por ID (ex.: 58372)" required>
+    </div>
+    <div class="col-auto"><button class="btn btn-primary">Buscar na Árvore B</button></div>
+</form>
+
+<div class="table-responsive">
+<table class="table table-striped align-middle">
+    <thead><tr><th>ID</th><th>Nome</th><th>E-mail</th><th>eSIM</th><th>Pacote</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for c in clientes %}
+        <tr>
+            <td>{{ c.id }}</td><td>{{ c.nome }}</td><td>{{ c.email }}</td><td>{{ c.esim or '—' }}</td>
+            <td>{{ nomePacote(c.pacote) }}</td>
+            <td><span class="selo selo-{{ c.status }}">{{ c.status }}</span></td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('detalheCliente', id=c.id) }}">Ver</a>
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alterarCliente', id=c.id) }}">Alterar</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<nav class="d-flex justify-content-between align-items-center">
+    <span class="text-secondary">Página {{ pagina }} de {{ paginas }} · em ordem crescente de ID</span>
+    <div>
+        {% if pagina > 1 %}<a class="btn btn-sm btn-outline-secondary" href="{{ url_for('listaClientes', pagina=pagina-1) }}">Anterior</a>{% endif %}
+        {% if pagina < paginas %}<a class="btn btn-sm btn-outline-secondary" href="{{ url_for('listaClientes', pagina=pagina+1) }}">Próxima</a>{% endif %}
+    </div>
+</nav>
+{% endblock %}

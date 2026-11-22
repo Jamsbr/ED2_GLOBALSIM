@@ -14,9 +14,7 @@
     <div class="mb-3">
         <label class="form-label">Região</label>
         <select class="form-select" name="regiao" required>
-            {% for r in ['Europa', 'América do Sul', 'América do Norte', 'Ásia', 'África', 'Oceania'] %}
-                <option {{ 'selected' if pais.regiao == r }}>{{ r }}</option>
-            {% endfor %}
+            {% for r in regioes %}<option {{ 'selected' if pais.regiao == r }}>{{ r }}</option>{% endfor %}
         </select>
     </div>
     <div class="mb-3">
@@ -26,9 +24,7 @@
     <div class="mb-3">
         <label class="form-label">Tecnologia</label>
         <select class="form-select" name="tecnologia" required>
-            {% for t in ['3G', '4G', '5G'] %}
-                <option {{ 'selected' if pais.tecnologia == t }}>{{ t }}</option>
-            {% endfor %}
+            {% for t in tecnologias %}<option {{ 'selected' if pais.tecnologia == t }}>{{ t }}</option>{% endfor %}
         </select>
     </div>
     <button class="btn btn-primary">Salvar</button>
