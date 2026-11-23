@@ -20,8 +20,8 @@ Acesse http://127.0.0.1:5000
 **Problema:** a Árvore B só localiza clientes pelo ID. Perguntas como "clientes ativos com o pacote Europa Plus" exigiriam varrer todos os registros.
 
 **Solução:** cada atributo consultado tem um índice secundário (`IndiceSecundario`), montado sobre a própria Tabela Hash: valor do atributo → lista ordenada de chaves primárias.
-- Clientes: status e pacote. Países: região.
+- Clientes: status e pacote. Países: região e tecnologia.
 - Os critérios escolhidos são combinados por **interseção de listas ordenadas** (começando pela menor) e os registros finais são lidos na Árvore B.
 - Os índices são mantidos a cada cadastro, alteração e associação, e refeitos a partir dos dados ao iniciar.
-- A tela **Busca avançada** mostra o plano de execução e compara as comparações feitas com as de uma varredura completa.
+- Os filtros das páginas **Países** e **Clientes** mostram o plano de execução e comparam as comparações feitas com as de uma varredura completa.
 

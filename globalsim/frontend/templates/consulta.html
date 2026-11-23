@@ -2,7 +2,6 @@
 {% from '_mapa.html' import desenhar %}
 {% block conteudo %}
 <h2>Consulta de conectividade</h2>
-<p class="text-secondary">Integra a Árvore B (cliente), a Tabela Hash (cobertura) e o Grafo (rota de menor latência).</p>
 
 <form method="get" class="row g-2 col-lg-9 mb-4">
     <div class="col-md-3">
@@ -49,21 +48,15 @@
                     <b>Latência estimada:</b> {{ resultado.rota.latencia }} ms</p>
                 {% endif %}
             </div></div>
+            {% set inst = resultado.instrumentacao %}
+            <p class="text-muted mt-3 mb-0">1. Árvore B: buscar({{ resultado.idCliente }}) → {{ inst.arvoreB.paginas }} página(s), {{ inst.arvoreB.comparacoes }} comparação(ões).</p>
+            {% if inst.hash %}<p class="text-muted mb-0">2. Tabela Hash: buscar("{{ resultado.destino }}") → endereço de base {{ inst.hash.indice }}, {{ inst.hash.comparacoes }} comparação(ões) na cadeia.</p>{% endif %}
+            {% if resultado.rota %}<p class="text-muted mb-0">3. Grafo: Dijkstra {{ resultado.origem }} → {{ resultado.destino }} → {{ resultado.rota.caminho | length - 1 }} conexão(ões), {{ resultado.rota.latencia }} ms.</p>{% endif %}
         </div>
         <div class="col-lg-7">
             {% if mapa %}<div class="card"><div class="card-body p-2">{{ desenhar(mapa) }}</div></div>{% endif %}
         </div>
     </div>
-
-    <details class="instrumentacao mt-3"><summary>Instrumentação da consulta</summary>
-        <ul class="mt-2 mb-0">
-            {% set ab = resultado.instrumentacao.arvoreB %}
-            <li><b>Árvore B</b> — ID {{ ab.chave }}: {{ ab.paginas }} página(s), {{ ab.comparacoes }} comparação(ões)</li>
-            {% if resultado.instrumentacao.hash %}
-            <li><b>Tabela Hash</b> — "{{ resultado.destino }}": posição base {{ resultado.instrumentacao.hash.indice }}, {{ resultado.instrumentacao.hash.comparacoes }} comparação(ões)</li>
-            {% endif %}
-        </ul>
-    </details>
     {% endif %}
 {% endif %}
 {% endblock %}

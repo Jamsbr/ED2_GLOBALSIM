@@ -1,5 +1,19 @@
 [
   {
+    "codigo": "AR",
+    "pais": "Argentina",
+    "regiao": "América do Sul",
+    "operadora": "Buenos SIM",
+    "tecnologia": "3G"
+  },
+  {
+    "codigo": "AU",
+    "pais": "Australia",
+    "regiao": "Oceania",
+    "operadora": "Roo",
+    "tecnologia": "5G"
+  },
+  {
     "codigo": "BR",
     "pais": "Brasil",
     "regiao": "América do Sul",
@@ -7,10 +21,38 @@
     "tecnologia": "5G"
   },
   {
-    "codigo": "PT",
-    "pais": "Portugal",
-    "regiao": "Europa",
-    "operadora": "Operadora PT",
+    "codigo": "CA",
+    "pais": "Canadá",
+    "regiao": "América do Norte",
+    "operadora": "Operadora CA",
+    "tecnologia": "5G"
+  },
+  {
+    "codigo": "CH",
+    "pais": "China",
+    "regiao": "Ásia",
+    "operadora": "BiliBili",
+    "tecnologia": "5G"
+  },
+  {
+    "codigo": "CL",
+    "pais": "Chile",
+    "regiao": "América do Sul",
+    "operadora": "Santiago",
+    "tecnologia": "3G"
+  },
+  {
+    "codigo": "EC",
+    "pais": "Equador",
+    "regiao": "América do Sul",
+    "operadora": "Quiton",
+    "tecnologia": "4G"
+  },
+  {
+    "codigo": "EG",
+    "pais": "Egito",
+    "regiao": "África",
+    "operadora": "Cairo",
     "tecnologia": "5G"
   },
   {
@@ -35,6 +77,62 @@
     "tecnologia": "5G"
   },
   {
+    "codigo": "JP",
+    "pais": "Japão",
+    "regiao": "Ásia",
+    "operadora": "Operadora JP",
+    "tecnologia": "4G"
+  },
+  {
+    "codigo": "KR",
+    "pais": "Koreia",
+    "regiao": "Ásia",
+    "operadora": "SK Telecom",
+    "tecnologia": "4G"
+  },
+  {
+    "codigo": "MA",
+    "pais": "Marrocos",
+    "regiao": "África",
+    "operadora": "Marros",
+    "tecnologia": "5G"
+  },
+  {
+    "codigo": "MG",
+    "pais": "Madagascar",
+    "regiao": "África",
+    "operadora": "Dodo",
+    "tecnologia": "3G"
+  },
+  {
+    "codigo": "MX",
+    "pais": "Mexico",
+    "regiao": "América do Norte",
+    "operadora": "Ay Cabron",
+    "tecnologia": "3G"
+  },
+  {
+    "codigo": "NZ",
+    "pais": "Nova Zelandia",
+    "regiao": "Oceania",
+    "operadora": "Sea",
+    "tecnologia": "4G"
+  },
+  {
+    "codigo": "PT",
+    "pais": "Portugal",
+    "regiao": "Europa",
+    "operadora": "Operadora PT",
+    "tecnologia": "5G"
+  },
+  {
+    "codigo": "RU",
+    "pais": "Russia",
+    "regiao": "Ásia",
+    "operadora": "Moscow Connections",
+    "tecnologia": "4G"
+  },
+  {
     "codigo": "US",
     "pais": "Estados Unidos",
     "regiao": "América do Norte",
@@ -42,17 +140,10 @@
     "tecnologia": "5G"
   },
   {
-    "codigo": "CA",
-    "pais": "Canadá",
-    "regiao": "América do Norte",
-    "operadora": "Operadora CA",
-    "tecnologia": "5G"
-  },
-  {
-    "codigo": "JP",
-    "pais": "Japão",
-    "regiao": "Ásia",
-    "operadora": "Operadora JP",
+    "codigo": "ZA",
+    "pais": "Africa do Sul",
+    "regiao": "África",
+    "operadora": "Jade",
     "tecnologia": "4G"
   }
 ]

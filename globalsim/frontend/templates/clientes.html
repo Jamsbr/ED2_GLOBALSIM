@@ -3,7 +3,7 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <h2 class="mb-0">Clientes <small class="text-secondary fs-6">{{ total }} registros na Árvore B</small></h2>
     <div>
-        <a class="btn btn-outline-primary" href="{{ url_for('arvoreB') }}">Instrumentação</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('arvoreB') }}">Ver Árvore B</a>
         <a class="btn btn-primary" href="{{ url_for('cadastrarCliente') }}">Cadastrar cliente</a>
     </div>
 </div>
@@ -14,6 +14,30 @@
     </div>
     <div class="col-auto"><button class="btn btn-primary">Buscar na Árvore B</button></div>
 </form>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <select class="form-select" name="status"><option value="">Status (todos)</option>
+            {% for s in estados %}<option {{ 'selected' if status == s }}>{{ s }}</option>{% endfor %}</select>
+    </div>
+    <div class="col-md-5">
+        <select class="form-select" name="pacote"><option value="">Pacote (todos)</option>
+            {% for p in pacotes %}<option value="{{ p.codigo }}" {{ 'selected' if pacote == p.codigo | string }}>{{ p.codigo }} — {{ p.pacote }}</option>{% endfor %}</select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary">Filtrar</button>
+        <a class="btn btn-link" href="{{ url_for('listaClientes') }}">Limpar</a>
+    </div>
+</form>
+
+{% if rc %}
+<div class="alert alert-success py-2">{{ rc.total }} cliente(s) encontrado(s) de {{ rc.base }}.</div>
+<p class="text-muted">Índice secundário:
+    {% for c in rc.criterios %}{{ c.descricao }} → {{ c.candidatos }} candidato(s), {{ c.custo }}{{ ' · ' if not loop.last }}{% endfor %}
+    · interseção: {{ rc.custo.intersecao }} comparação(ões) · Árvore B: {{ rc.custo.paginasArvore }} página(s),
+    {{ rc.custo.comparacoesArvore }} comparação(ões) para ler os exibidos.
+    Varredura completa: {{ rc.custo.varredura }} comparação(ões).</p>
+{% endif %}
 
 <div class="table-responsive">
 <table class="table table-striped align-middle">
@@ -34,6 +58,9 @@
 </table>
 </div>
 
+{% if rc and rc.total > rc.limite %}<p class="small text-secondary">Exibindo os primeiros {{ rc.limite }} de {{ rc.total }}.</p>{% endif %}
+
+{% if not rc %}
 <nav class="d-flex justify-content-between align-items-center">
     <span class="text-secondary">Página {{ pagina }} de {{ paginas }} · em ordem crescente de ID</span>
     <div>
@@ -41,4 +68,6 @@
         {% if pagina < paginas %}<a class="btn btn-sm btn-outline-secondary" href="{{ url_for('listaClientes', pagina=pagina+1) }}">Próxima</a>{% endif %}
     </div>
 </nav>
+{% endif %}
+
 {% endblock %}

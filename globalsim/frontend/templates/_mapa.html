@@ -11,12 +11,12 @@
     {% endfor %}
     {% for v in mapa.vertices %}
     <g class="vertice {{ 'ativo' if v.ativo }} {{ 'origem' if v.origem }} {{ 'destino' if v.destino }}">
-        <circle cx="{{ v.x }}" cy="{{ v.y }}" r="26"/>
+        <circle cx="{{ v.x }}" cy="{{ v.y }}" r="22"/>
         <text class="codigo" x="{{ v.x }}" y="{{ v.y + 5 }}" text-anchor="middle">{{ v.codigo }}</text>
-        <text class="nome" x="{{ v.x }}" y="{{ v.y + 46 }}" text-anchor="middle">{{ v.nome }}</text>
+        <text class="nome" x="{{ v.x }}" y="{{ v.y + 40 }}" text-anchor="middle">{{ v.nome }}</text>
         {% if v.ordem %}
-        <circle class="selo-ordem" cx="{{ v.x + 22 }}" cy="{{ v.y - 22 }}" r="11"/>
-        <text class="num-ordem" x="{{ v.x + 22 }}" y="{{ v.y - 18 }}" text-anchor="middle">{{ v.ordem }}</text>
+        <circle class="selo-ordem" cx="{{ v.x + 18 }}" cy="{{ v.y - 18 }}" r="11"/>
+        <text class="num-ordem" x="{{ v.x + 18 }}" y="{{ v.y - 14 }}" text-anchor="middle">{{ v.ordem - 1 }}</text>
         {% endif %}
     </g>
     {% endfor %}

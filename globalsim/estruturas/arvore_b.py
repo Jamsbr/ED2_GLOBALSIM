@@ -1,206 +1,178 @@
 class Registro:
-    __slots__ = ("chave", "valor")
-
-    def __init__(self, chave, valor):
-        self.chave = chave
-        self.valor = valor
+    def __init__(self, chave=None, elemento=None):
+        self.Chave = chave
+        self.Elemento = elemento
 
 
 class Pagina:
-    """Página da Árvore B: registros ordenados e (se não for folha) len(registros)+1 filhos."""
+    def __init__(self, ordem):
+        self.n = 0
+        self.r = [None for i in range(ordem)]
+        self.p = [None for i in range(ordem + 1)]
 
-    def __init__(self, id):
-        self.id = id
-        self.registros = []
-        self.filhos = []
 
-    @property
-    def folha(self):
-        return not self.filhos
+def Pesquisa(x, Ap, info=None):
+    i = 1
+    if Ap is None:
+        return None
+
+    while i < Ap.n and x.Chave > Ap.r[i - 1].Chave:
+        i += 1
+    if info is not None:
+        info["paginas"] += 1
+        info["comparacoes"] += i
+        info["caminho"].append({"nivel": len(info["caminho"]), "chaves": [Ap.r[k].Chave for k in range(Ap.n)]})
+
+    if x.Chave == Ap.r[i - 1].Chave:
+        return Ap.r[i - 1]
+    if x.Chave < Ap.r[i - 1].Chave:
+        return Pesquisa(x, Ap.p[i - 1], info)
+    return Pesquisa(x, Ap.p[i], info)
+
+
+def _InsereNaPagina(Ap, Reg, ApDir):
+    k = Ap.n
+    NaoAchouPosicao = (k > 0)
+    while NaoAchouPosicao:
+        if Reg.Chave >= Ap.r[k - 1].Chave:
+            NaoAchouPosicao = False
+            break
+        Ap.r[k] = Ap.r[k - 1]
+        Ap.p[k + 1] = Ap.p[k]
+        k -= 1
+        if k < 1:
+            NaoAchouPosicao = False
+
+    Ap.r[k] = Reg
+    Ap.p[k + 1] = ApDir
+    Ap.n += 1
+
+
+def _Ins(Reg, Ap, Cresceu, RegRetorno, ApRetorno, Ordem, info=None):
+    i = 1
+    if Ap is None:
+        return True, Reg, None
+
+    while i < Ap.n and Reg.Chave > Ap.r[i - 1].Chave:
+        i += 1
+    if info is not None:
+        info["paginas"] += 1
+        info["comparacoes"] += i
+
+    if Reg.Chave < Ap.r[i - 1].Chave:
+        i -= 1
+
+    Cresceu, RegRetorno, ApRetorno = _Ins(Reg, Ap.p[i], Cresceu, RegRetorno, ApRetorno, Ordem, info)
+
+    if not Cresceu:
+        return Cresceu, RegRetorno, ApRetorno
+    if Ap.n < Ordem:
+        _InsereNaPagina(Ap, RegRetorno, ApRetorno)
+        return False, RegRetorno, ApRetorno
+
+    # overflow: a página é dividida e o registro do meio sobe
+    if info is not None:
+        info["divisoes"] += 1
+    ApTemp = Pagina(Ordem)
+    ApTemp.n = 0
+    ApTemp.p[0] = None
+    if i < (Ordem // 2) + 1:
+        _InsereNaPagina(ApTemp, Ap.r[Ordem - 1], Ap.p[Ordem])
+        Ap.n -= 1
+        _InsereNaPagina(Ap, RegRetorno, ApRetorno)
+    else:
+        _InsereNaPagina(ApTemp, RegRetorno, ApRetorno)
+    for J in range((Ordem // 2) + 2, Ordem + 1):
+        _InsereNaPagina(ApTemp, Ap.r[J - 1], Ap.p[J])
+    Ap.n = Ordem // 2
+    ApTemp.p[0] = Ap.p[(Ordem // 2) + 1]
+    RegRetorno = Ap.r[Ordem // 2]
+    ApRetorno = ApTemp
+    return Cresceu, RegRetorno, ApRetorno
+
+
+def _Insere(Reg, Ap, Ordem, info=None):
+    Cresceu, RegRetorno, ApRetorno = _Ins(Reg, Ap, False, Registro(), Pagina(Ordem), Ordem, info)
+    if Cresceu:  # a raiz dividiu: a árvore cresce em altura
+        ApTemp = Pagina(Ordem)
+        ApTemp.n = 1
+        ApTemp.r[0] = RegRetorno
+        ApTemp.p[1] = ApRetorno
+        ApTemp.p[0] = Ap
+        Ap = ApTemp
+        if info is not None and ApTemp.p[0] is not None:
+            info["raizDividiu"] = True
+    return Ap
+
+
+def Imprime(Ap):
+    if Ap is not None:
+        for i in range(Ap.n):
+            yield from Imprime(Ap.p[i])
+            yield Ap.r[i]
+        yield from Imprime(Ap.p[Ap.n])
 
 
 class ArvoreB:
-    """Árvore B em memória. `ordem` = número máximo de chaves por página.
-
-    Inserção: desce até a folha; se a página estoura (ordem + 1 chaves) ela é
-    dividida e a chave do meio sobe para o pai. Se a raiz dividir, a árvore
-    cresce em altura. As operações guardam métricas (páginas visitadas,
-    comparações, divisões) para instrumentação.
-    """
+    """Guarda a raiz e a instrumentação; a lógica está nas funções acima."""
 
     def __init__(self, ordem=4):
-        if ordem < 2:
-            raise ValueError("A ordem deve ser pelo menos 2.")
         self.ordem = ordem
         self.raiz = None
         self.tamanho = 0
         self.divisoes = 0
-        self._proximoId = 1
-        self.ultimaBusca = {"chave": None, "encontrado": False, "paginas": 0,
-                            "comparacoes": 0, "caminho": []}
-        self.ultimaInsercao = {"chave": None, "paginas": 0, "comparacoes": 0,
-                               "divisoes": 0, "raizDividiu": False}
+        self.ultimaBusca = {"chave": None, "encontrado": False, "paginas": 0, "comparacoes": 0, "caminho": []}
+        self.ultimaInsercao = {"chave": None, "paginas": 0, "comparacoes": 0, "divisoes": 0, "raizDividiu": False}
 
-    # ------------------------------------------------------------ utilidades
-    def _novaPagina(self):
-        pagina = Pagina(self._proximoId)
-        self._proximoId += 1
-        return pagina
-
-    @staticmethod
-    def _posicao(pagina, chave):
-        """Busca sequencial dentro da página.
-        Retorna (posição, achou, comparações)."""
-        i = 0
-        comparacoes = 0
-        while i < len(pagina.registros):
-            comparacoes += 1
-            atual = pagina.registros[i].chave
-            if chave == atual:
-                return i, True, comparacoes
-            if chave < atual:
-                break
-            i += 1
-        return i, False, comparacoes
-
-    # ----------------------------------------------------------------- busca
-    def _localizar(self, chave):
-        """Retorna (registro | None, caminho de páginas, comparações)."""
-        pagina = self.raiz
-        caminho = []
-        comparacoes = 0
-        while pagina is not None:
-            i, achou, c = self._posicao(pagina, chave)
-            comparacoes += c
-            caminho.append({"pagina": pagina.id, "nivel": len(caminho),
-                            "chaves": [r.chave for r in pagina.registros]})
-            if achou:
-                return pagina.registros[i], caminho, comparacoes
-            pagina = None if pagina.folha else pagina.filhos[i]
-        return None, caminho, comparacoes
+    def _buscar(self, chave):
+        info = {"paginas": 0, "comparacoes": 0, "caminho": []}
+        return Pesquisa(Registro(chave), self.raiz, info), info
 
     def buscar(self, chave, registrar=True):
-        """Retorna o valor associado à chave ou None."""
-        registro, caminho, comparacoes = self._localizar(chave)
+        reg, info = self._buscar(chave)
         if registrar:
-            self.ultimaBusca = {"chave": chave, "encontrado": registro is not None,
-                                "paginas": len(caminho), "comparacoes": comparacoes,
-                                "caminho": caminho}
-        return registro.valor if registro else None
+            self.ultimaBusca = dict(info, chave=chave, encontrado=reg is not None)
+        return reg.Elemento if reg else None
 
     def custoBusca(self, chave):
-        """Busca sem alterar `ultimaBusca`; devolve (valor, páginas, comparações)."""
-        registro, caminho, comparacoes = self._localizar(chave)
-        return (registro.valor if registro else None), len(caminho), comparacoes
+        reg, info = self._buscar(chave)
+        return (reg.Elemento if reg else None), info["paginas"], info["comparacoes"]
 
     def atualizar(self, chave, valor):
-        """Substitui o valor de uma chave existente (a chave não muda)."""
-        registro, _, _ = self._localizar(chave)
-        if registro is None:
+        reg, _ = self._buscar(chave)
+        if reg is None:
             return False
-        registro.valor = valor
+        reg.Elemento = valor
         return True
 
-    # -------------------------------------------------------------- inserção
     def inserir(self, chave, valor):
-        """Insere o registro. Retorna False (sem alterar nada) se a chave já existir."""
-        operacao = {"chave": chave, "paginas": 0, "comparacoes": 0,
-                    "divisoes": 0, "raizDividiu": False}
-        registro = Registro(chave, valor)
-
-        if self.raiz is None:
-            self.raiz = self._novaPagina()
-            self.raiz.registros.append(registro)
-            self.tamanho = 1
-            operacao["paginas"] = 1
-            self.ultimaInsercao = operacao
-            return True
-
-        inseriu, promovido = self._inserir(self.raiz, registro, operacao)
-        if not inseriu:
+        if self._buscar(chave)[0] is not None:
             return False
-        if promovido is not None:  # a raiz dividiu: nova raiz, árvore cresce em altura
-            subiu, nova = promovido
-            novaRaiz = self._novaPagina()
-            novaRaiz.registros = [subiu]
-            novaRaiz.filhos = [self.raiz, nova]
-            self.raiz = novaRaiz
-            operacao["raizDividiu"] = True
+        info = {"chave": chave, "paginas": 0, "comparacoes": 0, "divisoes": 0, "raizDividiu": False}
+        self.raiz = _Insere(Registro(chave, valor), self.raiz, self.ordem, info)
         self.tamanho += 1
-        self.ultimaInsercao = operacao
+        self.divisoes += info["divisoes"]
+        self.ultimaInsercao = info
         return True
 
-    def _inserir(self, pagina, registro, operacao):
-        i, achou, c = self._posicao(pagina, registro.chave)
-        operacao["comparacoes"] += c
-        operacao["paginas"] += 1
-        if achou:
-            return False, None
-
-        if pagina.folha:
-            pagina.registros.insert(i, registro)
-        else:
-            inseriu, promovido = self._inserir(pagina.filhos[i], registro, operacao)
-            if not inseriu:
-                return False, None
-            if promovido is not None:
-                subiu, nova = promovido
-                pagina.registros.insert(i, subiu)
-                pagina.filhos.insert(i + 1, nova)
-
-        if len(pagina.registros) > self.ordem:  # overflow
-            return True, self._dividir(pagina, operacao)
-        return True, None
-
-    def _dividir(self, pagina, operacao):
-        meio = len(pagina.registros) // 2
-        nova = self._novaPagina()
-        subiu = pagina.registros[meio]
-        nova.registros = pagina.registros[meio + 1:]
-        pagina.registros = pagina.registros[:meio]
-        if pagina.filhos:
-            nova.filhos = pagina.filhos[meio + 1:]
-            pagina.filhos = pagina.filhos[:meio + 1]
-        self.divisoes += 1
-        operacao["divisoes"] += 1
-        return subiu, nova
-
-    # ------------------------------------------------------------ percursos
     def emOrdem(self):
-        """Gera os registros em ordem crescente de chave."""
-        yield from self._emOrdem(self.raiz)
-
-    def _emOrdem(self, pagina):
-        if pagina is None:
-            return
-        for i, registro in enumerate(pagina.registros):
-            if pagina.filhos:
-                yield from self._emOrdem(pagina.filhos[i])
-            yield registro
-        if pagina.filhos:
-            yield from self._emOrdem(pagina.filhos[-1])
-
-    def listar(self):
-        return [r.valor for r in self.emOrdem()]
+        return Imprime(self.raiz)
 
     def maiorChave(self):
-        pagina = self.raiz
-        while pagina is not None and not pagina.folha:
-            pagina = pagina.filhos[-1]
-        return pagina.registros[-1].chave if pagina else None
+        Ap = self.raiz
+        if Ap is None:
+            return None
+        while Ap.p[Ap.n] is not None:
+            Ap = Ap.p[Ap.n]
+        return Ap.r[Ap.n - 1].Chave
 
-    # ------------------------------------------------------- instrumentação
     def niveis(self):
-        """Lista de níveis; cada nível é uma lista de páginas {id, chaves}."""
         resultado = []
         atual = [self.raiz] if self.raiz else []
         while atual:
-            resultado.append([{"id": p.id, "chaves": [r.chave for r in p.registros]} for p in atual])
-            atual = [f for p in atual for f in p.filhos]
+            resultado.append([[Ap.r[i].Chave for i in range(Ap.n)] for Ap in atual])
+            atual = [Ap.p[i] for Ap in atual for i in range(Ap.n + 1) if Ap.p[i] is not None]
         return resultado
-
-    def altura(self):
-        return len(self.niveis())
 
     def estatisticas(self):
         niveis = self.niveis()

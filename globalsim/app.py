@@ -8,13 +8,12 @@ from servicos import GlobalSIM, REGIOES, STATUS, TECNOLOGIAS
 
 app = Flask(__name__, template_folder="frontend/templates", static_folder="frontend/static")
 app.secret_key = os.environ.get("GLOBALSIM_SECRET", "segredo123")
-app.permanent_session_lifetime = timedelta(days=30)  # login com permanência
+app.permanent_session_lifetime = timedelta(days=30)
 
 sistema = GlobalSIM()
 POR_PAGINA = 25
 
 
-# ------------------------------------------------------------------ sessão
 @app.before_request
 def validarSessao():
     idLogado = session.get("cliente_id")
@@ -41,7 +40,6 @@ def nomePacote(codigo):
 
 
 def destinoSeguro(destino):
-    """Só aceita caminhos internos (evita redirecionar para outro site)."""
     if destino and destino.startswith("/") and not urlparse(destino).netloc and not destino.startswith("//"):
         return destino
     return url_for("principal")
@@ -52,7 +50,6 @@ def numero(texto):
     return int(texto) if texto.isdigit() else None
 
 
-# ------------------------------------------------------------------ início / login
 @app.route('/')
 def principal():
     return render_template('index.html')
@@ -81,11 +78,15 @@ def logout():
     return redirect(url_for('principal'))
 
 
-# ------------------------------------------------------------------ Etapa 1: países
 @app.route('/paises')
 def listaPaises():
-    return render_template('paises.html', paises=sistema.paises.listar(),
-                           stats=sistema.paises.estatisticas(), posicoes=sistema.paises.posicoes)
+    regiao, tecnologia = request.args.get('regiao', ''), request.args.get('tecnologia', '')
+    busca = sistema.buscaPaises(regiao, tecnologia) if regiao or tecnologia else None
+    return render_template('paises.html', paises=busca["paises"] if busca else sistema.paises.listar(),
+                           busca=busca, regiao=regiao, tecnologia=tecnologia, regioes=REGIOES,
+                           tecnologias=TECNOLOGIAS, stats=sistema.paises.estatisticas(),
+                           posicoes=sistema.paises.posicoes,
+                           indices=[sistema.idxRegiao.estatisticas(), sistema.idxTecnologia.estatisticas()])
 
 
 @app.route('/paises/cadastrar', methods=['GET', 'POST'])
@@ -143,14 +144,17 @@ def cobertura():
     return render_template('cobertura.html')
 
 
-# ------------------------------------------------------------------ Etapa 2: clientes
 @app.route('/clientes')
 def listaClientes():
+    status, pacote = request.args.get('status', ''), request.args.get('pacote', '')
     total = sistema.clientes.tamanho
     paginas = max(1, -(-total // POR_PAGINA))
     pagina = min(max(numero(request.args.get('pagina')) or 1, 1), paginas)
-    return render_template('clientes.html', clientes=sistema.listarClientes(pagina, POR_PAGINA),
-                           pagina=pagina, paginas=paginas, total=total)
+    busca = sistema.buscaClientes(status, pacote) if status or pacote else None
+    return render_template('clientes.html', clientes=busca["clientes"] if busca else sistema.listarClientes(pagina, POR_PAGINA),
+                           rc=busca, status=status, pacote=pacote, pagina=pagina, paginas=paginas,
+                           total=total, estados=STATUS, pacotes=sistema.pacotes,
+                           indices=[sistema.idxStatus.estatisticas(), sistema.idxPacote.estatisticas()])
 
 
 @app.route('/clientes/buscar')
@@ -236,7 +240,6 @@ def arvoreB():
                            busca=sistema.clientes.ultimaBusca, insercao=sistema.clientes.ultimaInsercao)
 
 
-# ------------------------------------------------------------------ Etapa 3: rede e consulta integrada
 @app.route('/rede')
 def rede():
     algoritmo = request.args.get('algoritmo', '')
@@ -301,21 +304,6 @@ def consulta():
     return render_template('consulta.html', resultado=resultado, mapa=mapa, idCliente=idCliente or "",
                            origem=origem, destino=destino,
                            paises=[(p["codigo"], p["pais"]) for p in sistema.paises.listar()])
-
-
-# ------------------------------------------------------------------ diferencial
-@app.route('/busca')
-def busca():
-    resultadoClientes = resultadoPaises = None
-    f = request.args
-    if f.get('tipo') == 'clientes':
-        resultadoClientes = sistema.buscaClientes(status=f.get('status', ''), pacote=f.get('pacote', ''))
-    elif f.get('tipo') == 'paises' and f.get('regiao'):
-        resultadoPaises = sistema.buscaPaises(f.get('regiao'))
-    indices = [sistema.idxStatus.estatisticas(), sistema.idxPacote.estatisticas(),
-               sistema.idxRegiao.estatisticas()]
-    return render_template('busca.html', rc=resultadoClientes, rp=resultadoPaises, f=f, indices=indices,
-                           regioes=REGIOES, status=STATUS, pacotes=sistema.pacotes)
 
 
 if __name__ == '__main__':

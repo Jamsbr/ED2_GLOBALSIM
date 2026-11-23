@@ -5,7 +5,6 @@
     <h2 class="mb-0">Conexões - Grafos</h2>
     <a class="btn btn-primary" href="{{ url_for('consulta') }}">Consulta integrada de conectividade</a>
 </div>
-<p class="text-secondary">Cada país atendido é um vértice; o peso de cada conexão é a latência simulada em milissegundos.</p>
 
 <div class="card mb-2"><div class="card-body p-2">{{ desenhar(mapa) }}</div></div>
 <form method="post" action="{{ url_for('reorganizarRede') }}" class="mb-4 text-end">
@@ -29,9 +28,9 @@
                     {% for codigo, nomePais in vertices %}<option value="{{ codigo }}" {{ 'selected' if origem == codigo }}>{{ codigo }} — {{ nomePais }}</option>{% endfor %}
                 </select>
             </div>
-            <div class="col-6">
+            <div class="col-6" id="campoDestino">
                 <select class="form-select" name="destino">
-                    <option value="">Destino (só Dijkstra)…</option>
+                    <option value="">Destino…</option>
                     {% for codigo, nomePais in vertices %}<option value="{{ codigo }}" {{ 'selected' if destino == codigo }}>{{ codigo }} — {{ nomePais }}</option>{% endfor %}
                 </select>
             </div>
@@ -61,12 +60,11 @@
             {% else %}
                 <div class="alert alert-success mb-2">
                     <b>{{ 'BFS' if resultado.algoritmo == 'bfs' else 'DFS' }} a partir de {{ resultado.origem }}:</b><br>
-                    {% for v in resultado.ordem %}{{ loop.index }}. {{ v }} ({{ 'nível' if resultado.algoritmo == 'bfs' else 'profundidade' }} {{ resultado.detalhe[v] }}){{ '; ' if not loop.last }}{% endfor %}
+                    {% for v in resultado.ordem %}{{ loop.index0 }}. {{ v }} ({{ 'nível' if resultado.algoritmo == 'bfs' else 'profundidade' }} {{ resultado.detalhe[v] }}){{ '; ' if not loop.last }}{% endfor %}
                 </div>
                 {% if resultado.naoAlcancados %}
                 <p class="small text-secondary">Não alcançados: {{ resultado.naoAlcancados | join(', ') }}</p>
                 {% endif %}
-                <p class="small text-secondary">Os números no mapa mostram a ordem de visita; as arestas destacadas formam a árvore da busca.</p>
             {% endif %}
         {% endif %}
     </div>
@@ -110,4 +108,13 @@
         </table>
     </div>
 </div>
+<script>
+    const algoritmo = document.getElementById('algoritmo');
+    const campoDestino = document.getElementById('campoDestino');
+    function atualizarDestino() {
+        campoDestino.style.display = algoritmo.value === 'dijkstra' ? '' : 'none';
+    }
+    algoritmo.addEventListener('change', atualizarDestino);
+    atualizarDestino();
+</script>
 {% endblock %}

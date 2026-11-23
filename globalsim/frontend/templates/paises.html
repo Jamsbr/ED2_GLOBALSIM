@@ -5,6 +5,28 @@
     <a class="btn btn-primary" href="{{ url_for('cadastrarPais') }}">Cadastrar país</a>
 </div>
 
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <select class="form-select" name="regiao"><option value="">Região (todas)</option>
+            {% for r in regioes %}<option {{ 'selected' if regiao == r }}>{{ r }}</option>{% endfor %}</select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" name="tecnologia"><option value="">Tecnologia (todas)</option>
+            {% for t in tecnologias %}<option {{ 'selected' if tecnologia == t }}>{{ t }}</option>{% endfor %}</select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary">Filtrar</button>
+        <a class="btn btn-link" href="{{ url_for('listaPaises') }}">Limpar</a>
+    </div>
+</form>
+
+{% if busca %}
+<p class="text-muted">Índice secundário:
+    {% for c in busca.criterios %}{{ c.descricao }} → {{ c.candidatos }} candidato(s), {{ c.custo }} comparação(ões) no hash{{ ' · ' if not loop.last }}{% endfor %}
+    · interseção: {{ busca.intersecao }} comparação(ões) · {{ busca.paises | length }} de {{ busca.base }} país(es).
+    Varredura completa: {{ busca.varredura }} comparação(ões).</p>
+{% endif %}
+
 <table class="table table-striped align-middle">
     <thead>
         <tr><th>Código</th><th>País</th><th>Região</th><th>Operadora</th><th>Tecnologia</th><th></th></tr>
@@ -27,25 +49,7 @@
     {% endfor %}
     </tbody>
 </table>
+<p class="text-muted">Tabela Hash: capacidade {{ stats.capacidade }}, {{ stats.tamanho }} país(es), fator de carga {{ stats.fatorCarga }},
+    {{ stats.colisoes }} colisão(ões), maior cadeia {{ stats.maiorCadeia }}, {{ stats.redimensionamentos }} redimensionamento(s).</p>
 
-<details class="instrumentacao">
-    <summary>Instrumentação da Tabela Hash</summary>
-    <div class="row g-2 my-2">
-        {% for rotulo, valor in [('Capacidade (primo)', stats.capacidade), ('Países', stats.tamanho),
-                                 ('Fator de carga', stats.fatorCarga), ('Colisões', stats.colisoes),
-                                 ('Maior cadeia', stats.maiorCadeia), ('Redimensionamentos', stats.redimensionamentos)] %}
-        <div class="col-6 col-md-2"><div class="metrica"><b>{{ valor }}</b><span>{{ rotulo }}</span></div></div>
-        {% endfor %}
-    </div>
-    <table class="table table-sm table-striped">
-        <thead><tr><th>Posição</th><th>Chave</th><th>Próximo</th></tr></thead>
-        <tbody>
-        {% for slot in posicoes %}
-            <tr><td>{{ loop.index0 }}</td>
-                <td>{{ slot[0] if slot else '—' }}</td>
-                <td>{{ slot[2] if slot and slot[2] is not none else '—' }}</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</details>
 {% endblock %}

@@ -175,7 +175,7 @@ body {
     padding: 3rem 0;
 }
 .caixa {
-    flex: 1 1 260px;
+    flex: 1 1 220px;
     max-width: 360px;
     min-height: 220px;
     padding: 2rem 1.5rem;
@@ -238,17 +238,17 @@ body {
 
 /* ---------- mapa da rede (SVG) ---------- */
 .mapa { width: 100%; height: auto; display: block; }
-.mapa .aresta { stroke: #4a4a55; stroke-width: 2.5; }
-.mapa .aresta.destaque { stroke: var(--cor-site); stroke-width: 5; }
+.mapa .aresta { stroke: #4a4a55; stroke-width: 2; }
+.mapa .aresta.destaque { stroke: var(--cor-site); stroke-width: 4; }
 .mapa .peso rect { fill: var(--superficie-2); stroke: var(--borda); }
-.mapa .peso text { fill: var(--texto-suave); font-size: 12px; }
+.mapa .peso text { fill: var(--texto-suave); font-size: 11px; }
 .mapa .peso.destaque rect { stroke: var(--cor-site); }
 .mapa .peso.destaque text { fill: #fff; font-weight: 700; }
 .mapa .vertice circle:first-child { fill: var(--superficie-2); stroke: #6c6c78; stroke-width: 2.5; }
 .mapa .vertice.ativo circle:first-child { stroke: var(--cor-site); fill: #2a1f45; }
 .mapa .vertice.origem circle:first-child { fill: var(--cor-site); stroke: #fff; }
 .mapa .vertice.destino circle:first-child { fill: #20c997; stroke: #fff; }
-.mapa .codigo { fill: #fff; font-weight: 700; font-size: 15px; }
+.mapa .codigo { fill: #fff; font-weight: 700; font-size: 14px; }
 .mapa .nome { fill: var(--texto-suave); font-size: 12px; paint-order: stroke; stroke: var(--superficie); stroke-width: 5px; stroke-linejoin: round; }
 .mapa .selo-ordem { fill: #fff; }
 .mapa .num-ordem { fill: var(--cor-site-hover); font-weight: 700; font-size: 12px; }

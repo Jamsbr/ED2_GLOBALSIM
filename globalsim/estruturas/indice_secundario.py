@@ -4,13 +4,7 @@ from .tabela_hash import TabelaHash
 
 
 class IndiceSecundario:
-    """Índice secundário (diferencial): valor de um atributo -> lista ordenada de chaves primárias.
-
-    É montado sobre a própria TabelaHash: a chave é o valor do atributo e o
-    valor guardado é a lista de chaves primárias (IDs de clientes, códigos de
-    países) que têm esse valor. Isso permite localizar registros por atributos
-    que não são a chave da estrutura principal.
-    """
+    """Índice secundário sobre a Tabela Hash: valor do atributo -> lista ordenada de chaves primárias."""
 
     def __init__(self, campo):
         self.campo = campo
@@ -38,15 +32,11 @@ class IndiceSecundario:
             self.tabela.remover(chave)
 
     def buscar(self, valor):
-        """Lista ordenada de chaves primárias (vazia se o valor não existe).
-        Retorna (lista, comparações feitas na Tabela Hash)."""
         lista = self.tabela.buscar(self._normalizar(valor)) or []
         return list(lista), self.tabela.ultimaBusca["comparacoes"]
 
     @staticmethod
     def intersecar(a, b):
-        """Interseção por intercalação de duas listas ordenadas.
-        Retorna (resultado, comparações)."""
         i = j = comparacoes = 0
         resultado = []
         while i < len(a) and j < len(b):
@@ -64,6 +54,6 @@ class IndiceSecundario:
     def estatisticas(self):
         stats = self.tabela.estatisticas()
         stats["campo"] = self.campo
-        stats["entradas"] = sum(len(lista) for _, lista in self.tabela.itens())
+        stats["entradas"] = sum(len(p[1]) for p in self.tabela.posicoes if p)
         stats["valoresDistintos"] = self.tabela.tamanho
         return stats

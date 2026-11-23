@@ -1,81 +1,246 @@
 {
   "vertices": [
     {
+      "codigo": "AR",
+      "x": 981,
+      "y": 323
+    },
+    {
+      "codigo": "AU",
+      "x": 417,
+      "y": 567
+    },
+    {
       "codigo": "BR",
-      "x": 190,
-      "y": 70
-    },
-    {
-      "codigo": "US",
-      "x": 570,
-      "y": 70
-    },
-    {
-      "codigo": "PT",
-      "x": 190,
-      "y": 200
+      "x": 876,
+      "y": 489
     },
     {
       "codigo": "CA",
-      "x": 570,
-      "y": 200
+      "x": 793,
+      "y": 62
+    },
+    {
+      "codigo": "CH",
+      "x": 203,
+      "y": 442
+    },
+    {
+      "codigo": "CL",
+      "x": 1130,
+      "y": 337
+    },
+    {
+      "codigo": "EC",
+      "x": 1040,
+      "y": 470
+    },
+    {
+      "codigo": "EG",
+      "x": 548,
+      "y": 863
     },
     {
       "codigo": "ES",
-      "x": 80,
-      "y": 330
+      "x": 845,
+      "y": 718
     },
     {
       "codigo": "FR",
-      "x": 300,
-      "y": 330
-    },
-    {
-      "codigo": "JP",
-      "x": 660,
-      "y": 330
+      "x": 1008,
+      "y": 1122
     },
     {
       "codigo": "IT",
-      "x": 300,
-      "y": 450
+      "x": 897,
+      "y": 1020
+    },
+    {
+      "codigo": "JP",
+      "x": 118,
+      "y": 231
+    },
+    {
+      "codigo": "KR",
+      "x": 70,
+      "y": 373
+    },
+    {
+      "codigo": "MA",
+      "x": 661,
+      "y": 676
+    },
+    {
+      "codigo": "MG",
+      "x": 556,
+      "y": 1099
+    },
+    {
+      "codigo": "MX",
+      "x": 942,
+      "y": 60
+    },
+    {
+      "codigo": "NZ",
+      "x": 310,
+      "y": 673
+    },
+    {
+      "codigo": "PT",
+      "x": 981,
+      "y": 896
+    },
+    {
+      "codigo": "RU",
+      "x": 70,
+      "y": 523
+    },
+    {
+      "codigo": "US",
+      "x": 831,
+      "y": 324
+    },
+    {
+      "codigo": "ZA",
+      "x": 649,
+      "y": 974
     }
   ],
   "arestas": [
     {
+      "origem": "AR",
+      "destino": "BR",
+      "latencia": 28
+    },
+    {
+      "origem": "AR",
+      "destino": "CL",
+      "latencia": 14
+    },
+    {
+      "origem": "AU",
+      "destino": "CH",
+      "latencia": 33
+    },
+    {
+      "origem": "AU",
+      "destino": "MA",
+      "latencia": 150
+    },
+    {
+      "origem": "AU",
+      "destino": "NZ",
+      "latencia": 10
+    },
+    {
+      "origem": "BR",
+      "destino": "EC",
+      "latencia": 22
+    },
+    {
+      "origem": "BR",
+      "destino": "MA",
+      "latencia": 65
+    },
+    {
       "origem": "BR",
       "destino": "US",
-      "latencia": 80
-    },
-    {
-      "origem": "BR",
-      "destino": "PT",
-      "latencia": 120
-    },
-    {
-      "origem": "US",
-      "destino": "CA",
-      "latencia": 20
-    },
-    {
-      "origem": "PT",
-      "destino": "ES",
-      "latencia": 30
-    },
-    {
-      "origem": "PT",
-      "destino": "FR",
-      "latencia": 40
+      "latencia": 55
     },
     {
       "origem": "CA",
+      "destino": "MX",
+      "latencia": 30
+    },
+    {
+      "origem": "CA",
+      "destino": "US",
+      "latencia": 12
+    },
+    {
+      "origem": "CH",
       "destino": "JP",
-      "latencia": 110
+      "latencia": 28
+    },
+    {
+      "origem": "CH",
+      "destino": "KR",
+      "latencia": 24
+    },
+    {
+      "origem": "CH",
+      "destino": "RU",
+      "latencia": 45
+    },
+    {
+      "origem": "CL",
+      "destino": "EC",
+      "latencia": 20
+    },
+    {
+      "origem": "EG",
+      "destino": "MA",
+      "latencia": 38
+    },
+    {
+      "origem": "EG",
+      "destino": "MG",
+      "latencia": 60
+    },
+    {
+      "origem": "ES",
+      "destino": "IT",
+      "latencia": 18
+    },
+    {
+      "origem": "ES",
+      "destino": "MA",
+      "latencia": 14
+    },
+    {
+      "origem": "ES",
+      "destino": "PT",
+      "latencia": 8
+    },
+    {
+      "origem": "ES",
+      "destino": "US",
+      "latencia": 70
     },
     {
       "origem": "FR",
       "destino": "IT",
-      "latencia": 25
+      "latencia": 11
+    },
+    {
+      "origem": "FR",
+      "destino": "PT",
+      "latencia": 15
+    },
+    {
+      "origem": "JP",
+      "destino": "KR",
+      "latencia": 9
+    },
+    {
+      "origem": "KR",
+      "destino": "RU",
+      "latencia": 50
+    },
+    {
+      "origem": "MA",
+      "destino": "ZA",
+      "latencia": 90
+    },
+    {
+      "origem": "MG",
+      "destino": "ZA",
+      "latencia": 24
+    },
+    {
+      "origem": "MX",
+      "destino": "US",
+      "latencia": 18
     }
   ]
 }

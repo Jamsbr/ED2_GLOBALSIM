@@ -1,4 +1,3 @@
-{# O texto do logo (nomeSite) é definido em app.py, no context_processor #}
 <!doctype html>
 <html lang="pt-br" data-bs-theme="dark">
 <head>
@@ -38,22 +37,15 @@
             <a class="menu-link" href="{{ url_for('consulta', cliente=usuario.id) }}">Minha conectividade</a>
             <a class="menu-link" href="{{ url_for('associarCliente', id=usuario.id) }}">Meu pacote e eSIM</a>
             <a class="menu-link" href="{{ url_for('alterarCliente', id=usuario.id) }}">Meus dados</a>
+            <form method="post" action="{{ url_for('logout') }}">
+                <button class="menu-link menu-sair">Sair</button>
+            </form>
             {% else %}
             <div class="menu-capa menu-capa-curta"></div>
             <a class="menu-link menu-destaque" href="{{ url_for('login', proximo=request.path) }}">Login</a>
             <a class="menu-link" href="{{ url_for('cadastrarCliente') }}">Criar conta de cliente</a>
             {% endif %}
 
-            <div class="menu-secao">Operação da GlobalSIM</div>
-            <a class="menu-link" href="{{ url_for('listaClientes') }}">Clientes (Árvore B)</a>
-            <a class="menu-link" href="{{ url_for('busca') }}">Busca avançada</a>
-            <a class="menu-link" href="{{ url_for('consulta') }}">Consulta de conectividade</a>
-
-            {% if usuario %}
-            <form method="post" action="{{ url_for('logout') }}">
-                <button class="menu-link menu-sair">Sair</button>
-            </form>
-            {% endif %}
         </div>
     </div>
 </nav>
