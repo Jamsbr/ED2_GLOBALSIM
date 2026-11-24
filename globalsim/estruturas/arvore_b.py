@@ -1,3 +1,4 @@
+#Sem imports, porque os dados vêm do JSON pelo serviços.py
 class Registro:
     def __init__(self, chave=None, elemento=None):
         self.Chave = chave
@@ -11,7 +12,7 @@ class Pagina:
         self.p = [None for i in range(ordem + 1)]
 
 
-def Pesquisa(x, Ap, info=None):
+def Pesquisa(x, Ap, info=None): # É uma busca recursiva.
     i = 1
     if Ap is None:
         return None
@@ -47,8 +48,8 @@ def _InsereNaPagina(Ap, Reg, ApDir):
     Ap.p[k + 1] = ApDir
     Ap.n += 1
 
-
-def _Ins(Reg, Ap, Cresceu, RegRetorno, ApRetorno, Ordem, info=None):
+#Função auxiliar para descer, inserir e dividir.
+def _Ins(Reg, Ap, Cresceu, RegRetorno, ApRetorno, Ordem, info=None): 
     i = 1
     if Ap is None:
         return True, Reg, None
@@ -90,7 +91,7 @@ def _Ins(Reg, Ap, Cresceu, RegRetorno, ApRetorno, Ordem, info=None):
     ApRetorno = ApTemp
     return Cresceu, RegRetorno, ApRetorno
 
-
+#Insere um registro na árvore e trata o caso da raiz.
 def _Insere(Reg, Ap, Ordem, info=None):
     Cresceu, RegRetorno, ApRetorno = _Ins(Reg, Ap, False, Registro(), Pagina(Ordem), Ordem, info)
     if Cresceu:  # a raiz dividiu: a árvore cresce em altura
@@ -114,7 +115,12 @@ def Imprime(Ap):
 
 
 class ArvoreB:
-    """Guarda a raiz e a instrumentação; a lógica está nas funções acima."""
+    """Guarda a raiz e a instrumentação"""
+    # Usada em:
+    # app.py rota /clientes/arvore(arvoreB)
+    # app.py rota /clientes/<id>(detalheCliente)
+    # servicos.py buscaClietnes
+    # servicos.py buscaIntegrada
 
     def __init__(self, ordem=4):
         self.ordem = ordem

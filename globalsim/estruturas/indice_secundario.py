@@ -4,17 +4,17 @@ from .tabela_hash import TabelaHash
 
 
 class IndiceSecundario:
-    """Índice secundário sobre a Tabela Hash: valor do atributo -> lista ordenada de chaves primárias."""
+    #Índice secundário sobre a Tabela Hash: valor do atributo -> lista ordenada de chaves primárias.
 
     def __init__(self, campo):
         self.campo = campo
         self.tabela = TabelaHash()
 
     @staticmethod
-    def _normalizar(valor):
+    def _normalizar(valor):#Converte para texto
         return str(valor).strip().lower()
 
-    def adicionar(self, valor, chavePrimaria):
+    def adicionar(self, valor, chavePrimaria): #Adiciona chave primaria na lista de valor
         chave = self._normalizar(valor)
         lista = self.tabela.buscar(chave)
         if lista is None:
@@ -22,7 +22,7 @@ class IndiceSecundario:
         elif chavePrimaria not in lista:
             insort(lista, chavePrimaria)
 
-    def remover(self, valor, chavePrimaria):
+    def remover(self, valor, chavePrimaria): #Remove chave primaria da lista de valor
         chave = self._normalizar(valor)
         lista = self.tabela.buscar(chave)
         if lista is None or chavePrimaria not in lista:
@@ -31,12 +31,12 @@ class IndiceSecundario:
         if not lista:
             self.tabela.remover(chave)
 
-    def buscar(self, valor):
+    def buscar(self, valor): #Recebe valo e devolve lista de chaves primarias.
         lista = self.tabela.buscar(self._normalizar(valor)) or []
         return list(lista), self.tabela.ultimaBusca["comparacoes"]
 
     @staticmethod
-    def intersecar(a, b):
+    def intersecar(a, b): #Recebe duas listas e devolve as chaves que intersecam 
         i = j = comparacoes = 0
         resultado = []
         while i < len(a) and j < len(b):
@@ -51,7 +51,7 @@ class IndiceSecundario:
                 j += 1
         return resultado, comparacoes
 
-    def estatisticas(self):
+    def estatisticas(self): #Instrumentação.
         stats = self.tabela.estatisticas()
         stats["campo"] = self.campo
         stats["entradas"] = sum(len(p[1]) for p in self.tabela.posicoes if p)

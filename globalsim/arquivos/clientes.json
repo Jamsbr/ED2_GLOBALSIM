@@ -24014,5 +24014,13 @@
     "esim": "ESIM-77990",
     "pacote": 502,
     "status": "ativo"
+  },
+  {
+    "id": 100001,
+    "nome": "Maria Ines",
+    "email": "ines@gmail.com",
+    "esim": "ESIM-64382",
+    "pacote": 602,
+    "status": "ativo"
   }
 ]

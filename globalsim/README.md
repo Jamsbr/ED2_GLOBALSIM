@@ -24,4 +24,3 @@ Acesse http://127.0.0.1:5000
 - Os critérios escolhidos são combinados por **interseção de listas ordenadas** (começando pela menor) e os registros finais são lidos na Árvore B.
 - Os índices são mantidos a cada cadastro, alteração e associação, e refeitos a partir dos dados ao iniciar.
 - Os filtros das páginas **Países** e **Clientes** mostram o plano de execução e comparam as comparações feitas com as de uma varredura completa.
-

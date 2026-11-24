@@ -1,4 +1,3 @@
-"""Grafo da rede GlobalSIM com python-igraph. Vértice = código do país; peso da aresta = latência (ms)."""
 import random
 
 import igraph as ig
@@ -12,7 +11,7 @@ def criarGrafo(vertices, conexoes):
     return g
 
 
-def nomes(g):
+def nomes(g): #Devolve lista de nomes dos vértices.
     return g.vs["name"] if "name" in g.vs.attributes() else []
 
 
@@ -54,12 +53,12 @@ def removerConexao(g, origem, destino):
     return True
 
 
-def conexoes(g):
+def conexoes(g): #Lista as arestas no formato (origem, destino, latencia)
     n = nomes(g)
     return sorted((*sorted((n[a.source], n[a.target])), int(a["peso"])) for a in g.es)
 
 
-def bfs(g, origem):
+def bfs(g, origem): #Busca em largura.
     n = nomes(g)
     ids, inicios, pais = g.bfs(origem) # funciona com nomes
     nivel = {n[i]: k for k in range(len(inicios) - 1) for i in ids[inicios[k]:inicios[k + 1]]}
@@ -67,7 +66,7 @@ def bfs(g, origem):
     return {"ordem": [n[i] for i in ids], "nivel": nivel, "pai": pai}
 
 
-def dfs(g, origem):
+def dfs(g, origem): #Busca em profundidade.
     n = nomes(g)
     ids, pais = g.dfs(n.index(origem)) # funciona com índices numéricos
     pai, profundidade = {}, {}
@@ -77,7 +76,7 @@ def dfs(g, origem):
     return {"ordem": [n[i] for i in ids], "profundidade": profundidade, "pai": pai}
 
 
-def dijkstra(g, origem, destino=None):
+def dijkstra(g, origem, destino=None): #Menor rota.
     n = nomes(g)
     distancias = g.distances(origem, weights="peso")[0]
     resultado = {"distancias": {n[i]: (int(d) if d != float("inf") else None) for i, d in enumerate(distancias)},
@@ -88,7 +87,7 @@ def dijkstra(g, origem, destino=None):
         resultado["latencia"] = resultado["distancias"][destino]
     return resultado
 
-
+# Em vez de abrir janela preferi usar SVG no HTML.
 def layout(g, semente=0):
     sorteio = random.Random(semente)
     inicial = [[sorteio.random(), sorteio.random()] for _ in nomes(g)]

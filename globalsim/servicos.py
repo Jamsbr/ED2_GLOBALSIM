@@ -2,10 +2,10 @@ import json
 import os
 import random
 import re
-import itertools
-import math
+import itertools # Acidionado por conta do grafo
+import math # Acidionado por conta do grafo
 
-from estruturas import ArvoreB, IndiceSecundario, TabelaHash, grafo
+from estruturas import ArvoreB, IndiceSecundario, TabelaHash, grafo #Motivo da árvore não ter import
 
 PASTA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "arquivos")
 REGIOES = ["Europa", "América do Sul", "América do Norte", "Ásia", "África", "Oceania"]
@@ -25,12 +25,12 @@ def gravarJson(nome, dados):
     with open(os.path.join(PASTA, nome), "w", encoding="utf-8") as arquivo:
         json.dump(dados, arquivo, indent=2, ensure_ascii=False)
 
-
+# Estrutura + Regra de Negócio.
 class GlobalSIM:
     def __init__(self):
         self.carregar()
 
-    def carregar(self):
+    def carregar(self): # Carrega as estruturas de dados a partir dos arquivos JSON
         self.paises = TabelaHash()
         for pais in lerJson("paises.json"):
             self.paises.inserir(pais["codigo"], pais)
@@ -43,6 +43,7 @@ class GlobalSIM:
             if self.clientes.inserir(cliente["id"], cliente):
                 self.ordemCarga.append(cliente["id"])
 
+        # Grafo
         rede = lerJson("rede.json")
         vertices = [v for v in rede["vertices"] if self.paises.buscar(v["codigo"]) is not None]
         self.posicoes = {v["codigo"]: (v["x"], v["y"]) for v in vertices}
@@ -53,7 +54,7 @@ class GlobalSIM:
             if pais["codigo"] not in self.posicoes:
                 self._novoVertice(pais["codigo"])
 
-        # índices secundários (diferencial): refeitos a cada carga
+        # índices secundários (diferencial)
         self.idxRegiao = IndiceSecundario("região")
         self.idxTecnologia = IndiceSecundario("tecnologia")
         for pais in self.paises.listar():
@@ -63,19 +64,22 @@ class GlobalSIM:
         for registro in self.clientes.emOrdem():
             self._indexarCliente(registro.Elemento)
 
-    def salvarPaises(self):
+    def salvarPaises(self): #Persistência
         gravarJson("paises.json", self.paises.listar())
 
-    def salvarClientes(self):
+    def salvarClientes(self): #Persistência
         gravarJson("clientes.json", [self.clientes.buscar(i, registrar=False) for i in self.ordemCarga])
 
-    def salvarRede(self):
+    def salvarRede(self): #Persistência
         gravarJson("rede.json", {
             "vertices": [{"codigo": v, "x": self.posicoes[v][0], "y": self.posicoes[v][1]}
                          for v in self.codigosRede()],
             "arestas": [{"origem": o, "destino": d, "latencia": p} for o, d, p in self.conexoes()],
         })
-
+    
+    #
+    # Área de país
+    #
     @staticmethod
     def lerPais(form):
         pais = {c: form.get(c, "").strip() for c in ["codigo", "pais", "regiao", "operadora", "tecnologia"]}
@@ -146,6 +150,9 @@ class GlobalSIM:
                 "criterios": [{"descricao": d, "candidatos": len(i), "custo": c} for d, i, c in criterios],
                 "intersecao": comparacoes, "varredura": self.paises.tamanho * len(criterios)}
 
+    #
+    # Área de cliente
+    #
     def pacote(self, codigo):
         return next((p for p in self.pacotes if str(p["codigo"]) == str(codigo)), None)
 
@@ -262,6 +269,9 @@ class GlobalSIM:
                       "varredura": self.clientes.tamanho * len(criterios)},
         }
 
+    #
+    # Área de iterseção de índices secundários
+    #
     @staticmethod
     def _combinar(criterios):
         criterios = sorted(criterios, key=lambda c: len(c[1]))
@@ -271,6 +281,9 @@ class GlobalSIM:
             comparacoes += c
         return resultado, comparacoes
 
+    #
+    # Área de rede/grafo
+    #
     def codigosRede(self):
         return sorted(grafo.nomes(self.rede))
 
@@ -334,6 +347,9 @@ class GlobalSIM:
         pais = self.paises.buscar(codigo)
         return pais["pais"] if pais else codigo
 
+    #
+    # BFS, DFS e Dijkstra
+    #
     def executarAlgoritmo(self, algoritmo, origem, destino=""):
         if not grafo.temVertice(self.rede, origem):
             return {"erro": "Escolha um país de origem válido."}
@@ -353,6 +369,9 @@ class GlobalSIM:
                     "arestas": list(zip(caminho, caminho[1:])), "ordem": caminho}
         return {"erro": "Algoritmo desconhecido."}
 
+    #
+    # Consulta integrada: cliente + país + pacote + rota
+    #
     def consultaIntegrada(self, idCliente, origem, destino):
         r = {"idCliente": idCliente, "origem": origem, "destino": destino, "cliente": None, "pais": None,
              "pacote": None, "rota": None, "avisos": [], "erro": None, "instrumentacao": {}}
@@ -386,6 +405,9 @@ class GlobalSIM:
                          "latencia": dij["latencia"]}
         return r
 
+    #
+    # Área de mapa da rede/grafo
+    #
     def mapaRede(self, resultado=None):
         resultado = resultado if resultado and not resultado.get("erro") else None
         destacadas = {frozenset(par) for par in (resultado["arestas"] if resultado else [])}

@@ -10,18 +10,18 @@ app = Flask(__name__, template_folder="frontend/templates", static_folder="front
 app.secret_key = os.environ.get("GLOBALSIM_SECRET", "segredo123")
 app.permanent_session_lifetime = timedelta(days=30)
 
-sistema = GlobalSIM()
+sistema = GlobalSIM() # Inicializa o sistema GlobalSIM
 POR_PAGINA = 25
 
 
-@app.before_request
+@app.before_request #Antes de cada requisição, desloga o usuário se o cliente da sessão não existir mais.
 def validarSessao():
     idLogado = session.get("cliente_id")
     if idLogado is not None and sistema.cliente(idLogado, registrar=False) is None:
         session.pop("cliente_id", None)
 
 
-@app.context_processor
+@app.context_processor # Adiciona previamente o contexto para os templates. Ex: nome do site, usuário logado, pacote do usuário.
 def contexto():
     usuario = None
     idLogado = session.get("cliente_id")
@@ -39,7 +39,7 @@ def nomePacote(codigo):
     return pacote["pacote"] if pacote else "—"
 
 
-def destinoSeguro(destino):
+def destinoSeguro(destino): #Redirecionamento depois do login.
     if destino and destino.startswith("/") and not urlparse(destino).netloc and not destino.startswith("//"):
         return destino
     return url_for("principal")
